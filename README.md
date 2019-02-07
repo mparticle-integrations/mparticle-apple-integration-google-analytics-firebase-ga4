@@ -24,7 +24,7 @@ This repository contains the [Google Analytics for Firebase](https://firebase.go
 
 ### Documentation
 
-[Google Analytics for Firebase integration](https://docs.mparticle.com/integrations/firebaseanalytics/event/)
+[Google Analytics for Firebase integration](https://docs.mparticle.com/integrations/firebase/event/)
 
 ### License
 
