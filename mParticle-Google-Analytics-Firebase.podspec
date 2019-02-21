@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = "mParticle-Google-Analytics-Firebase"
-    s.version          = "7.8.5"
+    s.version          = "7.8.6"
     s.summary          = "Google Analytics for Firebase integration for mParticle"
 
     s.description      = <<-DESC
