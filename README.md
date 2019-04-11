@@ -4,16 +4,10 @@ This repository contains the [Google Analytics for Firebase](https://firebase.go
 
 ### Adding the integration
 
-1. Add the kit dependency to your app's Podfile or Cartfile:
+1. Add the kit dependency to your app's Podfile:
 
     ```
     pod 'mParticle-Google-Analytics-Firebase', '~> 1.2'
-    ```
-
-    OR
-
-    ```
-    github 'mparticle-integrations/mparticle-apple-integration-google-analytics-firebase' ~> 1.2.3
     ```
 
 2. Follow the mParticle iOS SDK [quick-start](https://github.com/mParticle/mparticle-apple-sdk), then rebuild and launch your app, and verify that you see `"Included kits: { Firebase Analytics }"` in your Xcode console 
