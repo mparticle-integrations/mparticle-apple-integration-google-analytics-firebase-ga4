@@ -72,7 +72,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
                                                               userInfo:userInfo];
         });
     }
-
+    
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
@@ -107,7 +107,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
         case MPCommerceEventActionAddToWishList: {
             for (MPProduct *product in commerceEvent.products) {
                 parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:product withValue:nil];
-
+                
                 [FIRAnalytics logEventWithName:kFIREventAddToWishlist
                                     parameters:parameters];
             }
@@ -118,7 +118,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
             NSNumber *value = commerceEvent.transactionAttributes.revenue;
             
             parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:nil withValue:value];
-
+            
             [FIRAnalytics logEventWithName:kFIREventBeginCheckout
                                 parameters:parameters];
         }
@@ -126,7 +126,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
             
         case MPCommerceEventActionCheckoutOptions: {
             parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:nil withValue:nil];
-
+            
             [FIRAnalytics logEventWithName:kFIREventSetCheckoutOption
                                 parameters:parameters];
         }
@@ -148,14 +148,14 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
         case MPCommerceEventActionViewDetail: {
             if (commerceEvent.products.count > 1) {
                 parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:commerceEvent.products[0] withValue:nil];
-
+                
                 [FIRAnalytics logEventWithName:kFIREventViewItemList
                                     parameters:parameters];
             }
             
             for (MPProduct *product in commerceEvent.products) {
                 parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:product withValue:nil];
-
+                
                 [FIRAnalytics logEventWithName:kFIREventViewItem
                                     parameters:parameters];
             }
@@ -166,7 +166,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
             NSNumber *value = commerceEvent.transactionAttributes.revenue;
             
             parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:nil withValue:value];
-
+            
             [FIRAnalytics logEventWithName:kFIREventEcommercePurchase
                                 parameters:parameters];
         }
@@ -174,7 +174,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
             
         case MPCommerceEventActionRefund: {
             NSNumber *value = commerceEvent.transactionAttributes.revenue;
-
+            
             [FIRAnalytics logEventWithName:kFIREventPurchaseRefund
                                 parameters:@{
                                              kFIRParameterCurrency: commerceEvent.currency,
@@ -196,7 +196,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
     if (!event || !event.name) {
         return [self execStatus:MPKitReturnCodeFail];
     }
-
+    
     [FIRAnalytics setScreenName:event.name screenClass:nil];
     
     return [self execStatus:MPKitReturnCodeSuccess];
@@ -326,7 +326,7 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
     if (commerceEvent.transactionAttributes.couponCode) {
         [parameters setObject:commerceEvent.transactionAttributes.couponCode forKey:kFIRParameterCoupon];
     }
-
+    
     return parameters;
 }
 
