@@ -15,6 +15,17 @@ static NSString *const kMPFIRUserIdValueEmail = @"email";
 static NSString *const kMPFIRUserIdValueMPID = @"mpid";
 static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
 
+static NSString *const reservedPrefixOne = @"firebase_";
+static NSString *const reservedPrefixTwo = @"google_";
+static NSString *const reservedPrefixThree = @"ga_";
+static NSString *const firebaseAllowedCharacters = @"_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME_INDEX = 39;
+const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX = 23;
+const NSInteger FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX = 99;
+const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
+
 #pragma mark Static Methods
 
 + (NSNumber *)kitCode {
@@ -196,7 +207,8 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
     if (!event || !event.name) {
         return [self execStatus:MPKitReturnCodeFail];
     }
-    
+
+    event.name = [self standardizeNameOrKey:event.name forEvent:YES];
     [FIRAnalytics setScreenName:event.name screenClass:nil];
     
     return [self execStatus:MPKitReturnCodeSuccess];
@@ -207,10 +219,58 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
         return [self execStatus:MPKitReturnCodeFail];
     }
     
+    event.name = [self standardizeNameOrKey:event.name forEvent:YES];
+    event.info = [self standardizeValues:event.info forEvent:YES];
     [FIRAnalytics logEventWithName:event.name
                         parameters:event.info];
     
     return [self execStatus:MPKitReturnCodeSuccess];
+}
+
+- (NSString *)standardizeNameOrKey:(NSString *)nameOrKey forEvent:(BOOL)forEvent {
+    NSString *standardizedString =  [nameOrKey stringByReplacingOccurrencesOfString:@"  " withString:@"_"];
+    NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:firebaseAllowedCharacters] invertedSet];
+    standardizedString = [[standardizedString componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
+    if (standardizedString.length > reservedPrefixOne.length && [standardizedString hasPrefix:reservedPrefixOne]) {
+        standardizedString = [standardizedString substringFromIndex:reservedPrefixOne.length];
+    } else if (standardizedString.length > reservedPrefixTwo.length && [standardizedString hasPrefix:reservedPrefixTwo]) {
+        standardizedString = [standardizedString substringFromIndex:reservedPrefixTwo.length];
+    } else if (standardizedString.length > reservedPrefixThree.length && [standardizedString hasPrefix:reservedPrefixThree]) {
+        standardizedString = [standardizedString substringFromIndex:reservedPrefixThree.length];
+    }
+    
+    NSCharacterSet *letterSet = [NSCharacterSet characterSetWithCharactersInString:aToZCharacters];
+    
+    while (![letterSet characterIsMember:[standardizedString characterAtIndex:0]] && standardizedString.length > 1) {
+        standardizedString = [standardizedString substringFromIndex:1];
+    }
+    
+    if (forEvent) {
+        standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_EVENT_NAME_INDEX];
+    } else {
+        standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX];
+    }
+    
+    return standardizedString;
+}
+
+- (NSDictionary<NSString *, id> *)standardizeValues:(NSDictionary<NSString *, id> *)values forEvent:(BOOL)forEvent {
+    NSMutableDictionary<NSString *, id>  *standardizedValue = [[NSMutableDictionary alloc] init];
+    
+    for (NSString *key in values.allKeys) {
+        NSString *standardizedKey = [self standardizeNameOrKey:key forEvent:forEvent];
+        if ([values[key] isKindOfClass:[NSString class]]) {
+            if (forEvent) {
+                standardizedValue[standardizedKey] = [(NSString *)values[key] substringToIndex:FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX];
+            } else {
+                standardizedValue[standardizedKey] = [(NSString *)values[key] substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX];
+            }
+        } else {
+            standardizedValue[standardizedKey] = values[key];
+        }
+    }
+    
+    return standardizedValue;
 }
 
 - (MPKitExecStatus *)onLoginComplete:(FilteredMParticleUser *)user request:(FilteredMPIdentityApiRequest *)request {
@@ -277,9 +337,10 @@ static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
 }
 
 - (void)logUserAttributes:(NSDictionary<NSString *, id> *)userAttributes {
-    NSArray *userAttributesKeys = userAttributes.allKeys;
+    NSDictionary<NSString *, id> *standardizedUserAttributes = [self standardizeValues:userAttributes forEvent:NO];
+    NSArray *userAttributesKeys = standardizedUserAttributes.allKeys;
     for (NSString *attributeKey in userAttributesKeys) {
-        [FIRAnalytics setUserPropertyString:userAttributes[attributeKey] forName:attributeKey];
+        [FIRAnalytics setUserPropertyString:standardizedUserAttributes[attributeKey] forName:attributeKey];
     }
 }
 
