@@ -246,12 +246,33 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     }
     
     if (forEvent) {
-        standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_EVENT_NAME_INDEX];
+        if (standardizedString.length > FIR_MAX_CHARACTERS_EVENT_NAME_INDEX) {
+            standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_EVENT_NAME_INDEX];
+        }
     } else {
-        standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX];
+        if (standardizedString.length > FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX) {
+            standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX];
+        }
     }
     
     return standardizedString;
+}
+
+- (id)standardizeValue:(id)value forEvent:(BOOL)forEvent {
+    id standardizedValue = value;
+    if ([value isKindOfClass:[NSString class]]) {
+        if (forEvent) {
+            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX) {
+                standardizedValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX];
+            }
+        } else {
+            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX) {
+                standardizedValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX];
+            }
+        }
+    }
+    
+    return standardizedValue;
 }
 
 - (NSDictionary<NSString *, id> *)standardizeValues:(NSDictionary<NSString *, id> *)values forEvent:(BOOL)forEvent {
@@ -259,15 +280,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     
     for (NSString *key in values.allKeys) {
         NSString *standardizedKey = [self standardizeNameOrKey:key forEvent:forEvent];
-        if ([values[key] isKindOfClass:[NSString class]]) {
-            if (forEvent) {
-                standardizedValue[standardizedKey] = [(NSString *)values[key] substringToIndex:FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX];
-            } else {
-                standardizedValue[standardizedKey] = [(NSString *)values[key] substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX];
-            }
-        } else {
-            standardizedValue[standardizedKey] = values[key];
-        }
+        standardizedValue[standardizedKey] = [self standardizeValue:values[key] forEvent:forEvent];
     }
     
     return standardizedValue;
@@ -317,12 +330,12 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)removeUserAttribute:(NSString *)key {
-    [FIRAnalytics setUserPropertyString:nil forName:key];
+    [FIRAnalytics setUserPropertyString:nil forName:[self standardizeNameOrKey:key forEvent:NO]];
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
 - (MPKitExecStatus *)setUserAttribute:(NSString *)key value:(id)value {
-    [FIRAnalytics setUserPropertyString:[NSString stringWithFormat:@"%@", value] forName:key];
+    [FIRAnalytics setUserPropertyString:[NSString stringWithFormat:@"%@", [self standardizeValue:value forEvent:NO]] forName:[self standardizeNameOrKey:key forEvent:NO]];
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
