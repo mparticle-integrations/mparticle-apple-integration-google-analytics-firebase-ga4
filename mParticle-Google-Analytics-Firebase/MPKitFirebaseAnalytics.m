@@ -97,7 +97,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     } else if ([event isKindOfClass:[MPCommerceEvent class]]) {
         return [self routeCommerceEvent:(MPCommerceEvent *)event];
     } else {
-        return [[MPKitExecStatus alloc] initWithSDKCode:@(MPKitInstanceAppsFlyer) returnCode:MPKitReturnCodeUnavailable];
+        return [self execStatus:MPKitReturnCodeUnavailable];
     }
 }
 
