@@ -91,7 +91,17 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     return [self started] ? self : nil;
 }
 
-- (MPKitExecStatus *)logCommerceEvent:(MPCommerceEvent *)commerceEvent {
+- (nonnull MPKitExecStatus *)logBaseEvent:(nonnull MPBaseEvent *)event {
+    if ([event isKindOfClass:[MPEvent class]]) {
+        return [self routeEvent:(MPEvent *)event];
+    } else if ([event isKindOfClass:[MPCommerceEvent class]]) {
+        return [self routeCommerceEvent:(MPCommerceEvent *)event];
+    } else {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+}
+
+- (MPKitExecStatus *)routeCommerceEvent:(MPCommerceEvent *)commerceEvent {
     NSDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
     
     switch (commerceEvent.action) {
@@ -214,15 +224,15 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
-- (MPKitExecStatus *)logEvent:(MPEvent *)event {
+- (MPKitExecStatus *)routeEvent:(MPEvent *)event {
     if (!event || !event.name) {
         return [self execStatus:MPKitReturnCodeFail];
     }
     
     event.name = [self standardizeNameOrKey:event.name forEvent:YES];
-    event.info = [self standardizeValues:event.info forEvent:YES];
+    event.customAttributes = [self standardizeValues:event.customAttributes forEvent:YES];
     [FIRAnalytics logEventWithName:event.name
-                        parameters:event.info];
+                        parameters:event.customAttributes];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }

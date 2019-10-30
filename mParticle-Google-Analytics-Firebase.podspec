@@ -16,9 +16,9 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = "8.0"
     s.ios.source_files      = 'mParticle-Google-Analytics-Firebase/*.{h,m,mm}'
-    s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 7.12.0'
+    s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 7.12'
     s.ios.frameworks = 'CoreTelephony', 'SystemConfiguration'
     s.libraries = 'z'
-    s.ios.dependency 'Firebase/Core', '~> 5.16.0'
+    s.ios.dependency 'Firebase/Core', '~> 6.10'
 
 end

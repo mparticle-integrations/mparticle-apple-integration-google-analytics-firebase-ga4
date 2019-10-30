@@ -65,7 +65,7 @@
     
     MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
     
-    MPKitExecStatus *execStatus = [exampleKit logCommerceEvent:event];
+    MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
     
     XCTAssertTrue(execStatus.success);
     XCTAssertTrue(exampleKit.firebaseOptions);
@@ -79,7 +79,7 @@
     
     MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionPurchase product:product];
     
-    MPKitExecStatus *execStatus = [exampleKit logCommerceEvent:event];
+    MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
     
     XCTAssertTrue(execStatus.success);
 }
@@ -90,7 +90,7 @@
     
     MPEvent *event = [[MPEvent alloc] initWithName:@"example" type:MPEventTypeOther];
     
-    MPKitExecStatus *execStatus = [exampleKit logEvent:event];
+    MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
     
     XCTAssertTrue(execStatus.success);
 }
@@ -101,7 +101,7 @@
     
     MPEvent *event;
     
-    MPKitExecStatus *execStatus = [exampleKit logEvent:event];
+    MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
     
     XCTAssertFalse(execStatus.success);
 }
