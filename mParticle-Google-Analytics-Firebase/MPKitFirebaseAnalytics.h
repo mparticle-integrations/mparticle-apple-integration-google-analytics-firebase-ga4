@@ -16,4 +16,6 @@
 
 static NSString * _Nonnull const kMPFIRGoogleAppIDKey = @"firebaseAppId";
 static NSString * _Nonnull const kMPFIRSenderIDKey = @"googleProjectNumber";
+static NSString * _Nonnull const kMPFIRAPIKey = @"firebaseAPIKey";
+static NSString * _Nonnull const kMPFIRProjectIDKey = @"firebaseProjectId";
 static NSString * _Nonnull const kMPFIRUserIdFieldKey = @"userIdField";

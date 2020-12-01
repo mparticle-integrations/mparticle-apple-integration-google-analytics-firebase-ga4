@@ -43,7 +43,7 @@
 
 - (void)testStarted {
     MPKitFirebaseAnalytics *exampleKit = [[MPKitFirebaseAnalytics alloc] init];
-    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096"}];
+    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096", kMPFIRAPIKey: @"AIzaSyDVH6Lxu4QvIWheB14FChPIdI6FiCi8PXY", kMPFIRProjectIDKey: @"mparticle-integration-test"}];
     XCTAssertTrue(exampleKit.started);
 }
 
@@ -61,7 +61,7 @@
 
 - (void)testLogCommerceEvent {
     MPKitFirebaseAnalytics *exampleKit = [[MPKitFirebaseAnalytics alloc] init];
-    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096"}];
+    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096", kMPFIRAPIKey: @"AIzaSyDVH6Lxu4QvIWheB14FChPIdI6FiCi8PXY", kMPFIRProjectIDKey: @"mparticle-integration-test"}];
     
     MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
     
@@ -73,7 +73,7 @@
 
 - (void)testLogCommerceEventPurchase {
     MPKitFirebaseAnalytics *exampleKit = [[MPKitFirebaseAnalytics alloc] init];
-    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096"}];
+    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096", kMPFIRAPIKey: @"AIzaSyDVH6Lxu4QvIWheB14FChPIdI6FiCi8PXY", kMPFIRProjectIDKey: @"mparticle-integration-test"}];
     
     MPProduct *product = [[MPProduct alloc] initWithName:@"Tardis" sku:@"9who" quantity:@1 price:@42.0];
     
@@ -86,7 +86,7 @@
 
 - (void)testLogEvent {
     MPKitFirebaseAnalytics *exampleKit = [[MPKitFirebaseAnalytics alloc] init];
-    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096"}];
+    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096", kMPFIRAPIKey: @"AIzaSyDVH6Lxu4QvIWheB14FChPIdI6FiCi8PXY", kMPFIRProjectIDKey: @"mparticle-integration-test"}];
     
     MPEvent *event = [[MPEvent alloc] initWithName:@"example" type:MPEventTypeOther];
     
@@ -97,7 +97,7 @@
 
 - (void)testLogEventWithNilEvent {
     MPKitFirebaseAnalytics *exampleKit = [[MPKitFirebaseAnalytics alloc] init];
-    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096"}];
+    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096", kMPFIRAPIKey: @"AIzaSyDVH6Lxu4QvIWheB14FChPIdI6FiCi8PXY", kMPFIRProjectIDKey: @"mparticle-integration-test"}];
     
     MPEvent *event;
     

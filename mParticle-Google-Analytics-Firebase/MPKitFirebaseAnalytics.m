@@ -52,9 +52,17 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         dispatch_once(&FirebasePredicate, ^{
             NSString *googleAppId = configuration[kMPFIRGoogleAppIDKey];
             NSString *gcmSenderId = configuration[kMPFIRSenderIDKey];
+            NSString *firAPIKey = configuration[kMPFIRAPIKey];
+            NSString *firProjectId = configuration[kMPFIRProjectIDKey];
             
             if (googleAppId && ![googleAppId isEqualToString:@""] && gcmSenderId && ![gcmSenderId isEqualToString:@""]) {
                 FIROptions *options = [[FIROptions alloc] initWithGoogleAppID:googleAppId GCMSenderID:gcmSenderId];
+                if (firAPIKey) {
+                    options.APIKey = firAPIKey;
+                }
+                if (firProjectId) {
+                    options.projectID = firProjectId;
+                }
                 
                 self.firebaseOptions = options;
                 [FIRApp configureWithOptions:options];
@@ -219,7 +227,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     }
 
     event.name = [self standardizeNameOrKey:event.name forEvent:YES];
-    [FIRAnalytics setScreenName:event.name screenClass:nil];
+    [FIRAnalytics logEventWithName:kFIREventScreenView parameters:@{kFIRParameterScreenName: event.name}];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }
