@@ -196,7 +196,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
             
             parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:nil withValue:value];
             
-            [FIRAnalytics logEventWithName:kFIREventEcommercePurchase
+            [FIRAnalytics logEventWithName:kFIREventPurchase
                                 parameters:parameters];
         }
             break;
@@ -204,7 +204,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         case MPCommerceEventActionRefund: {
             NSNumber *value = commerceEvent.transactionAttributes.revenue;
             
-            [FIRAnalytics logEventWithName:kFIREventPurchaseRefund
+            [FIRAnalytics logEventWithName:kFIREventRefund
                                 parameters:@{
                                              kFIRParameterCurrency: commerceEvent.currency,
                                              kFIRParameterValue: value,
@@ -384,11 +384,15 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     if (product.sku) {
         [parameters setObject:product.sku forKey:kFIRParameterItemID];
     }
+    NSMutableDictionary *itemDict = [[NSMutableDictionary alloc] init];
     if (product.name) {
-        [parameters setObject:product.name forKey:kFIRParameterItemName];
+        itemDict[kFIRParameterItemName] = product.name;
     }
     if (product.category) {
-        [parameters setObject:product.category forKey:kFIRParameterItemCategory];
+        itemDict[kFIRParameterItemCategory] = product.category;
+    }
+    if (itemDict.count > 0) {
+        [parameters setObject:@[itemDict] forKey:kFIRParameterItems];
     }
     if (product.price) {
         [parameters setObject:@(product.price.doubleValue * product.quantity.doubleValue) forKey:kFIRParameterValue];
