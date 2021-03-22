@@ -24,6 +24,7 @@
 @interface MPKitFirebaseAnalytics()
 
 @property (nonatomic, strong, readwrite) FIROptions *firebaseOptions;
+- (NSString *)standardizeNameOrKey:(NSString *)nameOrKey forEvent:(BOOL)forEvent;
 
 @end
 
@@ -104,6 +105,18 @@
     MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
     
     XCTAssertFalse(execStatus.success);
+}
+
+- (void)testSanitization {
+    MPKitFirebaseAnalytics *exampleKit = [[MPKitFirebaseAnalytics alloc] init];
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event name" forEvent:YES], @"event_name");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event_name " forEvent:YES], @"event_name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:YES], @"event_name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:YES], @"event_name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event name" forEvent:NO], @"event_name");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event_name " forEvent:NO], @"event_name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:NO], @"event_name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:NO], @"event_name_");
 }
 
 @end
