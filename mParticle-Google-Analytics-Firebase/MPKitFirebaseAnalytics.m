@@ -1,6 +1,5 @@
 #import "MPKitFirebaseAnalytics.h"
 #import "Firebase.h"
-#import "MPEnums.h"
 
 @interface MPKitFirebaseAnalytics()
 
@@ -246,9 +245,16 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (NSString *)standardizeNameOrKey:(NSString *)nameOrKey forEvent:(BOOL)forEvent {
-    NSString *standardizedString =  [nameOrKey stringByReplacingOccurrencesOfString:@"  " withString:@"_"];
-    NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:firebaseAllowedCharacters] invertedSet];
-    standardizedString = [[standardizedString componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
+    NSCharacterSet *whitespacesSet = [NSCharacterSet whitespaceCharacterSet];
+    NSMutableCharacterSet *firebaseAllowedCharacterSet = [NSMutableCharacterSet characterSetWithCharactersInString:firebaseAllowedCharacters];
+    [firebaseAllowedCharacterSet formUnionWithCharacterSet:whitespacesSet];
+    NSCharacterSet *notAllowedChars = [firebaseAllowedCharacterSet invertedSet];
+    NSString* allowedNameOrKey = [[nameOrKey componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
+
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"  +" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSString *trimmedString = [regex stringByReplacingMatchesInString:allowedNameOrKey options:0 range:NSMakeRange(0, [allowedNameOrKey length]) withTemplate:@" "];
+
+    NSString *standardizedString = [trimmedString stringByReplacingOccurrencesOfString:@" " withString:@"_"];
     if (standardizedString.length > reservedPrefixOne.length && [standardizedString hasPrefix:reservedPrefixOne]) {
         standardizedString = [standardizedString substringFromIndex:reservedPrefixOne.length];
     } else if (standardizedString.length > reservedPrefixTwo.length && [standardizedString hasPrefix:reservedPrefixTwo]) {

@@ -6,8 +6,8 @@ target 'mParticle-Google-Analytics-Firebase' do
   use_frameworks!
 
   # Pods for mParticle-Google-Analytics-Firebase
-pod 'Firebase/Core'
-pod 'mParticle-Apple-SDK/mParticle'
+  pod 'Firebase/Core'
+  pod 'mParticle-Apple-SDK/mParticle'
 
 end
 
@@ -16,8 +16,8 @@ target 'mParticle-Google-Analytics-FirebaseTests' do
   use_frameworks!
 
   # Pods for mParticle-Google-Analytics-FirebaseTests
-pod 'Firebase/Core'
-pod 'mParticle-Apple-SDK/mParticle'
-pod 'OCMock'
+  pod 'Firebase/Core'
+  pod 'mParticle-Apple-SDK/mParticle'
+  pod 'OCMock'
 
 end
