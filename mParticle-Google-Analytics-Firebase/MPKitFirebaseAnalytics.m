@@ -411,7 +411,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     if (value) {
         [parameters setObject:value forKey:kFIRParameterValue];
     }
-    if (commerceEvent.checkoutStep) {
+    if (commerceEvent.checkoutStep != NSNotFound) {
         [parameters setObject:@(commerceEvent.checkoutStep) forKey:kFIRParameterCheckoutStep];
     }
     if (commerceEvent.checkoutOptions) {
