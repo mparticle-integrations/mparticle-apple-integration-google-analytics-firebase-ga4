@@ -109,106 +109,63 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)routeCommerceEvent:(MPCommerceEvent *)commerceEvent {
-    NSDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
+    NSDictionary<NSString *, id> *parameters = [self getParameterForCommerceEvent:commerceEvent];
     
     switch (commerceEvent.action) {
         case MPCommerceEventActionAddToCart: {
-            for (MPProduct *product in commerceEvent.products) {
-                parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:product withValue:nil];
-                
-                [FIRAnalytics logEventWithName:kFIREventAddToCart
-                                    parameters:parameters];
-            }
+            [FIRAnalytics logEventWithName:kFIREventAddToCart
+                                parameters:parameters];
         }
             break;
             
         case MPCommerceEventActionRemoveFromCart: {
-            for (MPProduct *product in commerceEvent.products) {
-                parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:product withValue:nil];
-                
-                [FIRAnalytics logEventWithName:kFIREventRemoveFromCart
-                                    parameters:parameters];
-            }
+            [FIRAnalytics logEventWithName:kFIREventRemoveFromCart
+                                parameters:parameters];
         }
             break;
             
         case MPCommerceEventActionAddToWishList: {
-            for (MPProduct *product in commerceEvent.products) {
-                parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:product withValue:nil];
-                
-                [FIRAnalytics logEventWithName:kFIREventAddToWishlist
-                                    parameters:parameters];
-            }
+            [FIRAnalytics logEventWithName:kFIREventAddToWishlist
+                                parameters:parameters];
         }
             break;
             
         case MPCommerceEventActionCheckout: {
-            NSNumber *value = commerceEvent.transactionAttributes.revenue;
-            
-            parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:nil withValue:value];
-            
             [FIRAnalytics logEventWithName:kFIREventBeginCheckout
                                 parameters:parameters];
         }
             break;
             
         case MPCommerceEventActionCheckoutOptions: {
-            parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:nil withValue:nil];
-            
             [FIRAnalytics logEventWithName:kFIREventSetCheckoutOption
                                 parameters:parameters];
         }
             break;
             
         case MPCommerceEventActionClick: {
-            for (MPProduct *product in commerceEvent.products) {
-                if (product.sku) {
-                    [FIRAnalytics logEventWithName:kFIREventSelectContent
-                                        parameters:@{
-                                                     kFIRParameterContentType: @"product",
-                                                     kFIRParameterItemID: product.sku
-                                                     }];
-                }
-            }
+            NSMutableDictionary<NSString *, id> *mutableParameters = [parameters mutableCopy];
+            mutableParameters[kFIRParameterContentType] = @"product";
+            
+            [FIRAnalytics logEventWithName:kFIREventSelectContent
+                                parameters:mutableParameters];
         }
             break;
             
         case MPCommerceEventActionViewDetail: {
-            if (commerceEvent.products.count > 1) {
-                parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:commerceEvent.products[0] withValue:nil];
-                
-                [FIRAnalytics logEventWithName:kFIREventViewItemList
-                                    parameters:parameters];
-            }
-            
-            for (MPProduct *product in commerceEvent.products) {
-                parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:product withValue:nil];
-                
-                [FIRAnalytics logEventWithName:kFIREventViewItem
-                                    parameters:parameters];
-            }
+            [FIRAnalytics logEventWithName:kFIREventViewItem
+                                parameters:parameters];
         }
             break;
             
         case MPCommerceEventActionPurchase: {
-            NSNumber *value = commerceEvent.transactionAttributes.revenue;
-            
-            parameters = [self getParameterForCommerceEvent:commerceEvent andProduct:nil withValue:value];
-            
             [FIRAnalytics logEventWithName:kFIREventPurchase
                                 parameters:parameters];
         }
             break;
             
         case MPCommerceEventActionRefund: {
-            NSNumber *value = commerceEvent.transactionAttributes.revenue;
-            
             [FIRAnalytics logEventWithName:kFIREventRefund
-                                parameters:@{
-                                             kFIRParameterCurrency: commerceEvent.currency,
-                                             kFIRParameterValue: value,
-                                             kFIRParameterTransactionID: commerceEvent.transactionAttributes.transactionId
-                                             }];
+                                parameters:parameters];
         }
             break;
             
@@ -381,35 +338,40 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     }
 }
 
--(NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent andProduct:(MPProduct *)product withValue:(NSNumber *)value {
+-(NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent {
     NSMutableDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
     
-    if (product.quantity) {
-        [parameters setObject:product.quantity forKey:kFIRParameterQuantity];
-    }
-    if (product.sku) {
-        [parameters setObject:product.sku forKey:kFIRParameterItemID];
-    }
     NSMutableArray *itemArray = [[NSMutableArray alloc] init];
-    if (product.name) {
-        [itemArray addObject:product.name];
-        [parameters setObject:product.name forKey:kFIRParameterItemName];
+    for (MPProduct *product in commerceEvent.products) {
+        NSMutableDictionary<NSString *, id> *productParameters = [[NSMutableDictionary alloc] init];
+        
+        if (product.quantity) {
+            [productParameters setObject:product.quantity forKey:kFIRParameterQuantity];
+        }
+        if (product.sku) {
+            [productParameters setObject:product.sku forKey:kFIRParameterItemID];
+        }
+        if (product.name) {
+            [productParameters setObject:product.name forKey:kFIRParameterItemName];
+        }
+        if (product.category) {
+            [productParameters setObject:product.category forKey:kFIRParameterItemCategory];
+        }
+        if (product.price) {
+            [productParameters setObject:product.price forKey:kFIRParameterPrice];
+        }
+        
+        [itemArray addObject:productParameters];
     }
+    
     if (itemArray.count > 0) {
         [parameters setObject:itemArray forKey:kFIRParameterItems];
-    }
-    if (product.category) {
-        [parameters setObject:product.category forKey:kFIRParameterItemCategory];
-    }
-    if (product.price) {
-        [parameters setObject:@(product.price.doubleValue * product.quantity.doubleValue) forKey:kFIRParameterValue];
-        [parameters setObject:product.price forKey:kFIRParameterPrice];
     }
     if (commerceEvent.currency) {
         [parameters setObject:commerceEvent.currency forKey:kFIRParameterCurrency];
     }
-    if (value) {
-        [parameters setObject:value forKey:kFIRParameterValue];
+    if (commerceEvent.transactionAttributes.revenue) {
+        [parameters setObject:commerceEvent.transactionAttributes.revenue forKey:kFIRParameterValue];
     }
     if (commerceEvent.checkoutStep != NSNotFound) {
         [parameters setObject:@(commerceEvent.checkoutStep) forKey:kFIRParameterCheckoutStep];
