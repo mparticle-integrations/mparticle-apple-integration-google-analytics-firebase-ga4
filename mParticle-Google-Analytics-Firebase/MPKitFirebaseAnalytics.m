@@ -367,9 +367,14 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     if (itemArray.count > 0) {
         [parameters setObject:itemArray forKey:kFIRParameterItems];
     }
-    if (commerceEvent.currency) {
-        [parameters setObject:commerceEvent.currency forKey:kFIRParameterCurrency];
+    
+    NSString *currency = commerceEvent.currency;
+    if (!currency) {
+        NSLog(@"Warning: Currency field required by Firebase was not set, defaulting to 'USD'");
+        currency = @"USD";
     }
+    [parameters setObject:currency forKey:kFIRParameterCurrency];
+    
     if (commerceEvent.transactionAttributes.revenue) {
         [parameters setObject:commerceEvent.transactionAttributes.revenue forKey:kFIRParameterValue];
     }
