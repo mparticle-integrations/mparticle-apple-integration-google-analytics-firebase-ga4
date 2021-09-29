@@ -182,8 +182,8 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         return [self execStatus:MPKitReturnCodeFail];
     }
 
-    event.name = [self standardizeNameOrKey:event.name forEvent:YES];
-    [FIRAnalytics logEventWithName:kFIREventScreenView parameters:@{kFIRParameterScreenName: event.name}];
+    NSString *standardizedFirebaseEventName = [self standardizeNameOrKey:event.name forEvent:YES];
+    [FIRAnalytics logEventWithName:kFIREventScreenView parameters:@{kFIRParameterScreenName: standardizedFirebaseEventName}];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }
@@ -193,9 +193,9 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         return [self execStatus:MPKitReturnCodeFail];
     }
     
-    event.name = [self standardizeNameOrKey:event.name forEvent:YES];
+    NSString *standardizedFirebaseEventName = [self standardizeNameOrKey:event.name forEvent:YES];
     event.customAttributes = [self standardizeValues:event.customAttributes forEvent:YES];
-    [FIRAnalytics logEventWithName:event.name
+    [FIRAnalytics logEventWithName:standardizedFirebaseEventName
                         parameters:event.customAttributes];
     
     return [self execStatus:MPKitReturnCodeSuccess];
