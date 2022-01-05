@@ -110,69 +110,12 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 
 - (MPKitExecStatus *)routeCommerceEvent:(MPCommerceEvent *)commerceEvent {
     NSDictionary<NSString *, id> *parameters = [self getParameterForCommerceEvent:commerceEvent];
-    
-    switch (commerceEvent.action) {
-        case MPCommerceEventActionAddToCart: {
-            [FIRAnalytics logEventWithName:kFIREventAddToCart
-                                parameters:parameters];
-        }
-            break;
-            
-        case MPCommerceEventActionRemoveFromCart: {
-            [FIRAnalytics logEventWithName:kFIREventRemoveFromCart
-                                parameters:parameters];
-        }
-            break;
-            
-        case MPCommerceEventActionAddToWishList: {
-            [FIRAnalytics logEventWithName:kFIREventAddToWishlist
-                                parameters:parameters];
-        }
-            break;
-            
-        case MPCommerceEventActionCheckout: {
-            [FIRAnalytics logEventWithName:kFIREventBeginCheckout
-                                parameters:parameters];
-        }
-            break;
-            
-        case MPCommerceEventActionCheckoutOptions: {
-            [FIRAnalytics logEventWithName:kFIREventSetCheckoutOption
-                                parameters:parameters];
-        }
-            break;
-            
-        case MPCommerceEventActionClick: {
-            NSMutableDictionary<NSString *, id> *mutableParameters = [parameters mutableCopy];
-            mutableParameters[kFIRParameterContentType] = @"product";
-            
-            [FIRAnalytics logEventWithName:kFIREventSelectContent
-                                parameters:mutableParameters];
-        }
-            break;
-            
-        case MPCommerceEventActionViewDetail: {
-            [FIRAnalytics logEventWithName:kFIREventViewItem
-                                parameters:parameters];
-        }
-            break;
-            
-        case MPCommerceEventActionPurchase: {
-            [FIRAnalytics logEventWithName:kFIREventPurchase
-                                parameters:parameters];
-        }
-            break;
-            
-        case MPCommerceEventActionRefund: {
-            [FIRAnalytics logEventWithName:kFIREventRefund
-                                parameters:parameters];
-        }
-            break;
-            
-        default:
-            return [self execStatus:MPKitReturnCodeFail];
-            break;
+    NSString *eventName = [self getEventNameForCommerceEvent:commerceEvent parameters:parameters];
+    if (!eventName) {
+        return [self execStatus:MPKitReturnCodeFail];
     }
+    
+    [FIRAnalytics logEventWithName:eventName parameters:parameters];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }
@@ -195,8 +138,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     
     NSString *standardizedFirebaseEventName = [self standardizeNameOrKey:event.name forEvent:YES];
     event.customAttributes = [self standardizeValues:event.customAttributes forEvent:YES];
-    [FIRAnalytics logEventWithName:standardizedFirebaseEventName
-                        parameters:event.customAttributes];
+    [FIRAnalytics logEventWithName:standardizedFirebaseEventName parameters:event.customAttributes];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }
@@ -338,7 +280,46 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     }
 }
 
--(NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent {
+- (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters {
+    switch (commerceEvent.action) {
+        case MPCommerceEventActionAddToCart:
+            return kFIREventAddToCart;
+        case MPCommerceEventActionRemoveFromCart:
+            return kFIREventRemoveFromCart;
+        case MPCommerceEventActionAddToWishList:
+            return kFIREventAddToWishlist;
+        case MPCommerceEventActionCheckout:
+            return kFIREventBeginCheckout;
+        case MPCommerceEventActionCheckoutOptions: {
+            NSArray *ga4CommerceEventType = commerceEvent.customFlags[kMPFIRGA4CommerceEventType];
+            if (ga4CommerceEventType) {
+                if ([ga4CommerceEventType containsObject:kFIREventAddShippingInfo]) {
+                    return kFIREventAddShippingInfo;
+                } else if ([ga4CommerceEventType containsObject:kFIREventAddPaymentInfo]) {
+                    return kFIREventAddPaymentInfo;
+                } else {
+                    NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for Firebase for the custom flags to add.");
+                    return kFIREventSetCheckoutOption;
+                }
+            } else {
+                NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for Firebase for the custom flags to add.");
+                return kFIREventSetCheckoutOption;
+            }
+        }
+        case MPCommerceEventActionClick:
+            return kFIREventSelectContent;
+        case MPCommerceEventActionViewDetail:
+            return kFIREventViewItem;
+        case MPCommerceEventActionPurchase:
+            return kFIREventPurchase;
+        case MPCommerceEventActionRefund:
+            return kFIREventRefund;
+        default:
+            return nil;
+    }
+}
+
+- (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent {
     NSMutableDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
     
     NSMutableArray *itemArray = [[NSMutableArray alloc] init];
@@ -395,6 +376,26 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     }
     if (commerceEvent.transactionAttributes.couponCode) {
         [parameters setObject:commerceEvent.transactionAttributes.couponCode forKey:kFIRParameterCoupon];
+    }
+    
+    if (commerceEvent.action == MPCommerceEventActionClick) {
+        [parameters setObject:@"product" forKey:kFIRParameterContentType];
+    }
+    
+    NSArray *ga4CommerceEventType = commerceEvent.customFlags[kMPFIRGA4CommerceEventType];
+    if (ga4CommerceEventType) {
+        if ([ga4CommerceEventType containsObject:kFIREventAddShippingInfo]) {
+            NSArray *shippingTier = commerceEvent.customFlags[kMPFIRGA4ShippingTier];
+            if (shippingTier.count > 0) {
+                [parameters setObject:shippingTier[0] forKey:kFIRParameterShippingTier];
+            }
+        }
+        if ([ga4CommerceEventType containsObject:kFIREventAddPaymentInfo]) {
+            NSArray *paymentInfo = commerceEvent.customFlags[kMPFIRGA4PaymentType];
+            if (paymentInfo.count > 0) {
+                [parameters setObject:paymentInfo[0] forKey:kFIRParameterPaymentType];
+            }
+        }
     }
     
     return parameters;

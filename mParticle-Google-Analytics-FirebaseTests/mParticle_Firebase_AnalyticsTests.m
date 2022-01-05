@@ -4,32 +4,27 @@
 #import "OCMock.h"
 
 @interface NSBundle (BundleIdentifier)
-
 -(NSString *)bundleIdentifier;
-
 @end
 
 @implementation NSBundle (BundleIdentifier)
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
--(NSString *)bundleIdentifier
-{
+- (NSString *)bundleIdentifier {
     return @"com.mparticle.iOS-Example";
 }
 #pragma clang diagnostic pop
-
 @end
 
 @interface MPKitFirebaseAnalytics()
 
 @property (nonatomic, strong, readwrite) FIROptions *firebaseOptions;
 - (NSString *)standardizeNameOrKey:(NSString *)nameOrKey forEvent:(BOOL)forEvent;
-
+- (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters;
+- (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent;
 @end
 
 @interface mParticle_Firebase_AnalyticsTests : XCTestCase
-
 @end
 
 @implementation mParticle_Firebase_AnalyticsTests
@@ -58,6 +53,7 @@
     [FIRApp configureWithOptions:options];
     
     [mockFIRApp verify];
+    [mockFIRApp stopMocking];
 }
 
 - (void)testLogCommerceEvent {
@@ -117,6 +113,35 @@
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event_name " forEvent:NO], @"event_name_");
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:NO], @"event_name_");
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:NO], @"event_name_");
+}
+
+- (void)testCommerceEventCheckoutOptions {
+    MPKitFirebaseAnalytics *exampleKit = [[MPKitFirebaseAnalytics alloc] init];
+    [exampleKit didFinishLaunchingWithConfiguration:@{kMPFIRGoogleAppIDKey:@"1:338209672096:ios:57235e7ff821ba85", kMPFIRSenderIDKey:@"338209672096", kMPFIRAPIKey: @"AIzaSyDVH6Lxu4QvIWheB14FChPIdI6FiCi8PXY", kMPFIRProjectIDKey: @"mparticle-integration-test"}];
+    
+    // Test fallback when not using GA4
+    MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
+    NSDictionary<NSString *, id> *parameters = [exampleKit getParameterForCommerceEvent:event];
+    NSString *eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
+    XCTAssertEqualObjects(kFIREventSetCheckoutOption, eventName);
+    
+    // Test kFIREventAddShippingInfo
+    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
+    [event addCustomFlag:kFIREventAddShippingInfo withKey:kMPFIRGA4CommerceEventType];
+    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
+    XCTAssertEqualObjects(kFIREventAddShippingInfo, eventName);
+    
+    // Test kFIREventAddPaymentInfo
+    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
+    [event addCustomFlag:kFIREventAddPaymentInfo withKey:kMPFIRGA4CommerceEventType];
+    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
+    XCTAssertEqualObjects(kFIREventAddPaymentInfo, eventName);
+    
+    // Test both (defaults to kFIREventAddShippingInfo)
+    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
+    [event addCustomFlags:@[kFIREventAddShippingInfo, kFIREventAddPaymentInfo] withKey:kMPFIRGA4CommerceEventType];
+    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
+    XCTAssertEqualObjects(kFIREventAddShippingInfo, eventName);
 }
 
 @end
