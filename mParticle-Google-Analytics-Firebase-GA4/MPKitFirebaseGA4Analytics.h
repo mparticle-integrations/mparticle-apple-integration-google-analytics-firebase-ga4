@@ -5,7 +5,7 @@
 #import "mParticle.h"
 #endif
 
-@interface MPKitFirebaseAnalytics : NSObject <MPKitProtocol>
+@interface MPKitFirebaseGA4Analytics : NSObject <MPKitProtocol>
 
 @property (nonatomic, strong, nonnull) NSDictionary *configuration;
 @property (nonatomic, strong, nullable) NSDictionary *launchOptions;
@@ -14,8 +14,7 @@
 
 @end
 
-static NSString * _Nonnull const kMPFIRUserIdFieldKey = @"userIdField";
-
+static NSString * _Nonnull const kMPFIRGA4UserIdFieldKey = @"userIdField";
 static NSString * _Nonnull const kMPFIRGA4CommerceEventType = @"GA4.CommerceEventType";
 static NSString * _Nonnull const kMPFIRGA4PaymentType = @"GA4.PaymentType";
 static NSString * _Nonnull const kMPFIRGA4ShippingTier = @"GA4.ShippingTier";

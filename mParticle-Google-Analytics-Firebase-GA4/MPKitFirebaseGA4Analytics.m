@@ -1,13 +1,7 @@
-#import "MPKitFirebaseAnalytics.h"
+#import "MPKitFirebaseGA4Analytics.h"
 #import "Firebase.h"
 
-@interface MPKitFirebaseAnalytics()
-
-@property (nonatomic, strong, readwrite) FIROptions *firebaseOptions;
-
-@end
-
-@implementation MPKitFirebaseAnalytics
+@implementation MPKitFirebaseGA4Analytics
 
 static NSString *const kMPFIRUserIdValueCustomerID = @"customerId";
 static NSString *const kMPFIRUserIdValueEmail = @"email";
@@ -28,11 +22,11 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 #pragma mark Static Methods
 
 + (NSNumber *)kitCode {
-    return @(MPKitInstanceGoogleAnalyticsFirebase);
+    return @(MPKitInstanceGoogleAnalyticsFirebaseGA4);
 }
 
 + (void)load {
-    MPKitRegister *kitRegister = [[MPKitRegister alloc] initWithName:@"Google Analytics for Firebase" className:@"MPKitFirebaseAnalytics"];
+    MPKitRegister *kitRegister = [[MPKitRegister alloc] initWithName:@"GA4 for Firebase" className:@"MPKitFirebaseGA4Analytics"];
     [MParticle registerExtension:kitRegister];
 }
 
@@ -267,11 +261,11 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
                 } else if ([ga4CommerceEventType containsObject:kFIREventAddPaymentInfo]) {
                     return kFIREventAddPaymentInfo;
                 } else {
-                    NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for Firebase for the custom flags to add.");
+                    NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for GA4 Firebase for the custom flags to add.");
                     return kFIREventSetCheckoutOption;
                 }
             } else {
-                NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for Firebase for the custom flags to add.");
+                NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for GA4 Firebase for the custom flags to add.");
                 return kFIREventSetCheckoutOption;
             }
         }
@@ -372,8 +366,8 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 
 - (NSString * _Nullable)userIdForFirebase:(FilteredMParticleUser *)currentUser {
     NSString *userId;
-    if (currentUser != nil && self.configuration[kMPFIRUserIdFieldKey] != nil) {
-        NSString *key = self.configuration[kMPFIRUserIdFieldKey];
+    if (currentUser != nil && self.configuration[kMPFIRGA4UserIdFieldKey] != nil) {
+        NSString *key = self.configuration[kMPFIRGA4UserIdFieldKey];
         if ([key isEqualToString:kMPFIRUserIdValueCustomerID] && currentUser.userIdentities[@(MPUserIdentityCustomerId)] != nil) {
             userId = currentUser.userIdentities[@(MPUserIdentityCustomerId)];
         } else if ([key isEqualToString:kMPFIRUserIdValueEmail] && currentUser.userIdentities[@(MPUserIdentityEmail)] != nil) {

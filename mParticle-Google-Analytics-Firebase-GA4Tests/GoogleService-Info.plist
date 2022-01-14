@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>87073390384-0c1ot9q1ec7q12tm964ptlo44igp7kcm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.87073390384-0c1ot9q1ec7q12tm964ptlo44igp7kcm</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDVH6Lxu4QvIWheB14FChPIdI6FiCi8PXY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>338209672096</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mparticle.mParticle-Google-Analytics-FirebaseTests</string>
+	<key>PROJECT_ID</key>
+	<string>mparticle-integration-test</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mparticle-integration-test.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:338209672096:ios:57235e7ff821ba85</string>
+</dict>
+</plist>
