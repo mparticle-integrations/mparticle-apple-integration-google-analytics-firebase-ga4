@@ -46,39 +46,8 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     _configuration = configuration;
     
     if ([FIRApp defaultApp] == nil) {
-        static dispatch_once_t FirebasePredicate;
-        
-        dispatch_once(&FirebasePredicate, ^{
-            NSString *googleAppId = configuration[kMPFIRGoogleAppIDKey];
-            NSString *gcmSenderId = configuration[kMPFIRSenderIDKey];
-            NSString *firAPIKey = configuration[kMPFIRAPIKey];
-            NSString *firProjectId = configuration[kMPFIRProjectIDKey];
-            
-            if (googleAppId && ![googleAppId isEqualToString:@""] && gcmSenderId && ![gcmSenderId isEqualToString:@""]) {
-                FIROptions *options = [[FIROptions alloc] initWithGoogleAppID:googleAppId GCMSenderID:gcmSenderId];
-                if (firAPIKey) {
-                    options.APIKey = firAPIKey;
-                }
-                if (firProjectId) {
-                    options.projectID = firProjectId;
-                }
-                
-                self.firebaseOptions = options;
-                [FIRApp configureWithOptions:options];
-                
-                self->_started = YES;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSDictionary *userInfo = @{mParticleKitInstanceKey:[[self class] kitCode]};
-                    
-                    [[NSNotificationCenter defaultCenter] postNotificationName:mParticleKitDidBecomeActiveNotification
-                                                                        object:nil
-                                                                      userInfo:userInfo];
-                });
-            } else {
-                NSLog(@"Invalid Firebase App ID: %@ or invalid Google Project Number: %@", googleAppId, gcmSenderId);
-            }
-        });
+        NSAssert(NO, @"There is no instance of Firebase. Check the docs and review your code.");
+        return [self execStatus:MPKitReturnCodeFail];
     } else {
         _started = YES;
         
