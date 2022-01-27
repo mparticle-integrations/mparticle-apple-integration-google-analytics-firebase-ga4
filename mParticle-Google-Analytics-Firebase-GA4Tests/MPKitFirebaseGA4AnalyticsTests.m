@@ -55,6 +55,36 @@
     XCTAssertTrue(execStatus.success);
 }
 
+- (void)testLogCommerceEventImpression {
+    MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
+    [exampleKit didFinishLaunchingWithConfiguration:@{}];
+
+    MPProduct *product = [[MPProduct alloc] initWithName:@"Tardis" sku:@"9who" quantity:@1 price:@42.0];
+    MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithImpressionName:@"suggested products list" product:product];
+    MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
+
+    XCTAssertTrue(execStatus.success);
+}
+
+- (void)testLogCommerceEventPromotion {
+    MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
+    [exampleKit didFinishLaunchingWithConfiguration:@{}];
+
+    MPPromotion *promotion = [[MPPromotion alloc] init];
+    promotion.promotionId = @"my_promo_1";
+    promotion.creative = @"sale_banner_1";
+    promotion.name = @"App-wide 50% off sale";
+    promotion.position = @"dashboard_bottom";
+
+    MPPromotionContainer *container = [[MPPromotionContainer alloc] initWithAction:MPPromotionActionView promotion:promotion];
+
+    MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithPromotionContainer:container];
+    
+    MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
+
+    XCTAssertTrue(execStatus.success);
+}
+
 - (void)testLogEvent {
     MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
     [exampleKit didFinishLaunchingWithConfiguration:@{}];
