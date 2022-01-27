@@ -270,7 +270,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
             }
         }
         case MPCommerceEventActionClick:
-            return kFIREventSelectContent;
+            return kFIREventSelectItem;
         case MPCommerceEventActionViewDetail:
             return kFIREventViewItem;
         case MPCommerceEventActionPurchase:
