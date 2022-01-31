@@ -72,13 +72,35 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)routeCommerceEvent:(MPCommerceEvent *)commerceEvent {
-    NSDictionary<NSString *, id> *parameters = [self getParameterForCommerceEvent:commerceEvent];
-    NSString *eventName = [self getEventNameForCommerceEvent:commerceEvent parameters:parameters];
-    if (!eventName) {
-        return [self execStatus:MPKitReturnCodeFail];
+    NSDictionary<NSString *, id> *parameters;
+    NSString *eventName;
+    if (commerceEvent.promotionContainer) {
+        if (commerceEvent.promotionContainer.action == MPPromotionActionClick) {
+            eventName = kFIREventSelectPromotion;
+        } else if (commerceEvent.promotionContainer.action == MPPromotionActionView) {
+            eventName = kFIREventViewPromotion;
+        }
+        for (MPPromotion *promotion in commerceEvent.promotionContainer.promotions) {
+            parameters = [self getParameterForPromotionCommerceEvent:promotion];
+            
+            [FIRAnalytics logEventWithName:eventName parameters:parameters];
+        }
+    } else if (commerceEvent.impressions) {
+        eventName = kFIREventViewItemList;
+        for (NSString *impressionKey in commerceEvent.impressions) {
+            parameters = [self getParameterForImpressionCommerceEvent:impressionKey products:commerceEvent.impressions[impressionKey]];
+            
+            [FIRAnalytics logEventWithName:eventName parameters:parameters];
+        }
+    } else {
+        parameters = [self getParameterForCommerceEvent:commerceEvent];
+        eventName = [self getEventNameForCommerceEvent:commerceEvent parameters:parameters];
+        if (!eventName) {
+            return [self execStatus:MPKitReturnCodeFail];
+        }
+        
+        [FIRAnalytics logEventWithName:eventName parameters:parameters];
     }
-    
-    [FIRAnalytics logEventWithName:eventName parameters:parameters];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }
@@ -280,6 +302,63 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         default:
             return nil;
     }
+}
+
+- (NSDictionary<NSString *, id> *)getParameterForPromotionCommerceEvent:(MPPromotion *)promotion {
+    NSMutableDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
+    
+    if (promotion.promotionId) {
+        [parameters setObject:promotion.promotionId forKey:kFIRParameterPromotionID];
+    }
+    if (promotion.creative) {
+        [parameters setObject:promotion.creative forKey:kFIRParameterCreativeName];
+    }
+    if (promotion.name) {
+        [parameters setObject:promotion.name forKey:kFIRParameterPromotionName];
+    }
+    if (promotion.position) {
+        [parameters setObject:promotion.position forKey:kFIRParameterCreativeSlot];
+    }
+    
+    return parameters;
+}
+
+- (NSDictionary<NSString *, id> *)getParameterForImpressionCommerceEvent:(NSString *)impressionKey products:(NSSet<MPProduct *> *)products {
+    NSMutableDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
+    
+    [parameters setObject:impressionKey forKey:kFIRParameterItemListID];
+    [parameters setObject:impressionKey forKey:kFIRParameterItemListName];
+    
+    if (products.count > 0) {
+        NSMutableArray *itemArray = [[NSMutableArray alloc] init];
+        for (MPProduct *product in products) {
+            NSMutableDictionary<NSString *, id> *productParameters = [[NSMutableDictionary alloc] init];
+            
+            if (product.quantity) {
+                [productParameters setObject:product.quantity forKey:kFIRParameterQuantity];
+            }
+            if (product.sku) {
+                [productParameters setObject:product.sku forKey:kFIRParameterItemID];
+            }
+            if (product.name) {
+                [productParameters setObject:product.name forKey:kFIRParameterItemName];
+            }
+            if (product.category) {
+                [productParameters setObject:product.category forKey:kFIRParameterItemCategory];
+            }
+            if (product.price) {
+                [productParameters setObject:product.price forKey:kFIRParameterPrice];
+            }
+            
+            [itemArray addObject:productParameters];
+        }
+        
+        if (itemArray.count > 0) {
+            [parameters setObject:itemArray forKey:kFIRParameterItems];
+        }
+    }
+    
+    return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent {
