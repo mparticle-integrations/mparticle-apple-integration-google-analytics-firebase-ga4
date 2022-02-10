@@ -1,5 +1,6 @@
 #import "MPKitFirebaseGA4Analytics.h"
 #import "Firebase.h"
+#import "MPHasher.h"
 
 @implementation MPKitFirebaseGA4Analytics
 
@@ -7,6 +8,16 @@ static NSString *const kMPFIRUserIdValueCustomerID = @"customerId";
 static NSString *const kMPFIRUserIdValueEmail = @"email";
 static NSString *const kMPFIRUserIdValueMPID = @"mpid";
 static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
+static NSString *const kMPFIRUserIdValueOther = @"Other";
+static NSString *const kMPFIRUserIdValueOther2 = @"Other2";
+static NSString *const kMPFIRUserIdValueOther3 = @"Other3";
+static NSString *const kMPFIRUserIdValueOther4 = @"Other4";
+static NSString *const kMPFIRUserIdValueOther5 = @"Other5";
+static NSString *const kMPFIRUserIdValueOther6 = @"Other6";
+static NSString *const kMPFIRUserIdValueOther7 = @"Other7";
+static NSString *const kMPFIRUserIdValueOther8 = @"Other8";
+static NSString *const kMPFIRUserIdValueOther9 = @"Other9";
+static NSString *const kMPFIRUserIdValueOther10 = @"Other10";
 
 static NSString *const reservedPrefixOne = @"firebase_";
 static NSString *const reservedPrefixTwo = @"google_";
@@ -445,17 +456,46 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 
 - (NSString * _Nullable)userIdForFirebase:(FilteredMParticleUser *)currentUser {
     NSString *userId;
-    if (currentUser != nil && self.configuration[kMPFIRGA4UserIdFieldKey] != nil) {
-        NSString *key = self.configuration[kMPFIRGA4UserIdFieldKey];
-        if ([key isEqualToString:kMPFIRUserIdValueCustomerID] && currentUser.userIdentities[@(MPUserIdentityCustomerId)] != nil) {
+    if (currentUser != nil && self.configuration[kMPFIRGA4ExternalUserIdentityType] != nil) {
+        NSString *externalUserIdentityType = self.configuration[kMPFIRGA4ExternalUserIdentityType];
+        
+        if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueCustomerID] && currentUser.userIdentities[@(MPUserIdentityCustomerId)] != nil) {
             userId = currentUser.userIdentities[@(MPUserIdentityCustomerId)];
-        } else if ([key isEqualToString:kMPFIRUserIdValueEmail] && currentUser.userIdentities[@(MPUserIdentityEmail)] != nil) {
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueEmail] && currentUser.userIdentities[@(MPUserIdentityEmail)] != nil) {
             userId = currentUser.userIdentities[@(MPUserIdentityEmail)];
-        } else if ([key isEqualToString:kMPFIRUserIdValueMPID] && currentUser.userId != nil) {
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueMPID] && currentUser.userId != nil) {
             userId = currentUser.userId != 0 ? [currentUser.userId stringValue] : nil;
-        } else if ([key isEqualToString:kMPFIRUserIdValueDeviceStamp]) {
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueDeviceStamp]) {
             userId = [[[MParticle sharedInstance] identity] deviceApplicationStamp];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther] && currentUser.userIdentities[@(MPUserIdentityOther)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther2] && currentUser.userIdentities[@(MPUserIdentityOther2)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther2)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther3] && currentUser.userIdentities[@(MPUserIdentityOther3)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther3)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther4] && currentUser.userIdentities[@(MPUserIdentityOther4)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther4)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther5] && currentUser.userIdentities[@(MPUserIdentityOther5)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther5)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther6] && currentUser.userIdentities[@(MPUserIdentityOther6)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther6)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther7] && currentUser.userIdentities[@(MPUserIdentityOther7)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther7)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther8] && currentUser.userIdentities[@(MPUserIdentityOther8)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther8)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther9] && currentUser.userIdentities[@(MPUserIdentityOther9)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther9)];
+        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther10] && currentUser.userIdentities[@(MPUserIdentityOther10)] != nil) {
+            userId = currentUser.userIdentities[@(MPUserIdentityOther10)];
         }
+    }
+    
+    if (userId) {
+        if ([self.configuration[kMPFIRGA4ExternalUserIdentityType] isEqualToString: @"True"]) {
+            userId = [NSString stringWithCString:mParticle::Hasher::hashString([[userId lowercaseString] UTF8String]).c_str() encoding:NSUTF8StringEncoding];
+        }
+    } else {
+        NSLog(@"External identity type of %@ not set on the user", self.configuration[kMPFIRGA4ExternalUserIdentityType]);
     }
     return userId;
 }
