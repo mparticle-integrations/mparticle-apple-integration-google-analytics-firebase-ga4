@@ -461,8 +461,6 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         
         if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueCustomerID] && currentUser.userIdentities[@(MPUserIdentityCustomerId)] != nil) {
             userId = currentUser.userIdentities[@(MPUserIdentityCustomerId)];
-        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueEmail] && currentUser.userIdentities[@(MPUserIdentityEmail)] != nil) {
-            userId = currentUser.userIdentities[@(MPUserIdentityEmail)];
         } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueMPID] && currentUser.userId != nil) {
             userId = currentUser.userId != 0 ? [currentUser.userId stringValue] : nil;
         } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueDeviceStamp]) {
@@ -491,7 +489,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     }
     
     if (userId) {
-        if ([self.configuration[kMPFIRGA4ExternalUserIdentityType] isEqualToString: @"True"]) {
+        if ([self.configuration[kMPFIRGA4ShouldHashUserId] isEqualToString: @"True"]) {
             userId = [NSString stringWithCString:mParticle::Hasher::hashString([[userId lowercaseString] UTF8String]).c_str() encoding:NSUTF8StringEncoding];
         }
     } else {
