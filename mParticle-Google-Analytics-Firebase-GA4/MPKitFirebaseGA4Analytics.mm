@@ -4,10 +4,8 @@
 
 @implementation MPKitFirebaseGA4Analytics
 
-static NSString *const kMPFIRUserIdValueCustomerID = @"customerId";
-static NSString *const kMPFIRUserIdValueEmail = @"email";
+static NSString *const kMPFIRUserIdValueCustomerID = @"CustomerId";
 static NSString *const kMPFIRUserIdValueMPID = @"mpid";
-static NSString *const kMPFIRUserIdValueDeviceStamp = @"deviceApplicationStamp";
 static NSString *const kMPFIRUserIdValueOther = @"Other";
 static NSString *const kMPFIRUserIdValueOther2 = @"Other2";
 static NSString *const kMPFIRUserIdValueOther3 = @"Other3";
@@ -463,8 +461,6 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
             userId = currentUser.userIdentities[@(MPUserIdentityCustomerId)];
         } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueMPID] && currentUser.userId != nil) {
             userId = currentUser.userId != 0 ? [currentUser.userId stringValue] : nil;
-        } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueDeviceStamp]) {
-            userId = [[[MParticle sharedInstance] identity] deviceApplicationStamp];
         } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther] && currentUser.userIdentities[@(MPUserIdentityOther)] != nil) {
             userId = currentUser.userIdentities[@(MPUserIdentityOther)];
         } else if ([externalUserIdentityType isEqualToString: kMPFIRUserIdValueOther2] && currentUser.userIdentities[@(MPUserIdentityOther2)] != nil) {
