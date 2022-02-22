@@ -16,6 +16,7 @@
 
 static NSString * _Nonnull const kMPFIRGA4ExternalUserIdentityType = @"externalUserIdentityType";
 static NSString * _Nonnull const kMPFIRGA4ShouldHashUserId = @"hashUserId";
+static NSString * _Nonnull const kMPFIRGA4ForwardRequestsServerSide = @"forwardWebRequestsServerSide";
 static NSString * _Nonnull const kMPFIRGA4CommerceEventType = @"GA4.CommerceEventType";
 static NSString * _Nonnull const kMPFIRGA4PaymentType = @"GA4.PaymentType";
 static NSString * _Nonnull const kMPFIRGA4ShippingTier = @"GA4.ShippingTier";

@@ -2,6 +2,12 @@
 #import "Firebase.h"
 #import "MPHasher.h"
 
+@interface MPKitFirebaseGA4Analytics () <MPKitProtocol> {
+    BOOL forwardRequestsServerSide;
+}
+
+@end
+
 @implementation MPKitFirebaseGA4Analytics
 
 static NSString *const kMPFIRUserIdValueCustomerID = @"CustomerId";
@@ -22,6 +28,7 @@ static NSString *const reservedPrefixTwo = @"google_";
 static NSString *const reservedPrefixThree = @"ga_";
 static NSString *const firebaseAllowedCharacters = @"_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static NSString *const instanceIdIntegrationKey = @"app_instance_id";
 
 const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME_INDEX = 39;
 const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX = 23;
@@ -52,6 +59,11 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         NSAssert(NO, @"There is no instance of Firebase. Check the docs and review your code.");
         return [self execStatus:MPKitReturnCodeFail];
     } else {
+        if ([self.configuration[kMPFIRGA4ForwardRequestsServerSide] isEqualToString: @"True"]) {
+            forwardRequestsServerSide = true;
+            [self updateInstanceIDIntegration];
+        }
+        
         _started = YES;
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -71,6 +83,10 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (nonnull MPKitExecStatus *)logBaseEvent:(nonnull MPBaseEvent *)event {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     if ([event isKindOfClass:[MPEvent class]]) {
         return [self routeEvent:(MPEvent *)event];
     } else if ([event isKindOfClass:[MPCommerceEvent class]]) {
@@ -115,6 +131,10 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)logScreen:(MPEvent *)event {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     if (!event || !event.name) {
         return [self execStatus:MPKitReturnCodeFail];
     }
@@ -204,6 +224,10 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)onLoginComplete:(FilteredMParticleUser *)user request:(FilteredMPIdentityApiRequest *)request {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     NSString *userId = [self userIdForFirebase:user];
     if (userId) {
         [FIRAnalytics setUserID:userId];
@@ -215,6 +239,10 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)onIdentifyComplete:(FilteredMParticleUser *)user request:(FilteredMPIdentityApiRequest *)request {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     NSString *userId = [self userIdForFirebase:user];
     if (userId) {
         [FIRAnalytics setUserID:userId];
@@ -226,6 +254,10 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)onModifyComplete:(FilteredMParticleUser *)user request:(FilteredMPIdentityApiRequest *)request {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     NSString *userId = [self userIdForFirebase:user];
     if (userId) {
         [FIRAnalytics setUserID:userId];
@@ -237,6 +269,10 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)onLogoutComplete:(FilteredMParticleUser *)user request:(FilteredMPIdentityApiRequest *)request {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     NSString *userId = [self userIdForFirebase:user];
     if (userId) {
         [FIRAnalytics setUserID:userId];
@@ -247,16 +283,28 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (MPKitExecStatus *)removeUserAttribute:(NSString *)key {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     [FIRAnalytics setUserPropertyString:nil forName:[self standardizeNameOrKey:key forEvent:NO]];
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
 - (MPKitExecStatus *)setUserAttribute:(NSString *)key value:(id)value {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     [FIRAnalytics setUserPropertyString:[NSString stringWithFormat:@"%@", [self standardizeValue:value forEvent:NO]] forName:[self standardizeNameOrKey:key forEvent:NO]];
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
 - (MPKitExecStatus *)setUserIdentity:(NSString *)identityString identityType:(MPUserIdentity)identityType {
+    if (forwardRequestsServerSide) {
+        return [self execStatus:MPKitReturnCodeUnavailable];
+    }
+    
     NSString *userId = [self userIdForFirebase:[self.kitApi getCurrentUserWithKit:self]];
     if (userId) {
         [FIRAnalytics setUserID:userId];
@@ -492,6 +540,15 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         NSLog(@"External identity type of %@ not set on the user", self.configuration[kMPFIRGA4ExternalUserIdentityType]);
     }
     return userId;
+}
+
+- (void)updateInstanceIDIntegration  {
+    NSString *appInstanceID = [FIRAnalytics appInstanceID];
+    
+    if (appInstanceID.length) {
+        NSDictionary<NSString *, NSString *> *integrationAttributes = @{InstanceIdIntegrationKey:appInstanceID};
+        [[MParticle sharedInstance] setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
+    }
 }
 
 @end
