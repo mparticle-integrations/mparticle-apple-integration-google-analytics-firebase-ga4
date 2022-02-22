@@ -28,7 +28,7 @@ static NSString *const reservedPrefixTwo = @"google_";
 static NSString *const reservedPrefixThree = @"ga_";
 static NSString *const firebaseAllowedCharacters = @"_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-static NSString *const InstanceIdIntegrationKey = @"app_instance_id";
+static NSString *const instanceIdIntegrationKey = @"app_instance_id";
 
 const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME_INDEX = 39;
 const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX = 23;
