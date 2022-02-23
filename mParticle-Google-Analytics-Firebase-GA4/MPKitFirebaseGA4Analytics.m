@@ -1,6 +1,6 @@
 #import "MPKitFirebaseGA4Analytics.h"
 #import "Firebase.h"
-#import "MPHasher.h"
+#import "MPIHasher.h"
 
 @interface MPKitFirebaseGA4Analytics () <MPKitProtocol> {
     BOOL forwardRequestsServerSide;
@@ -534,7 +534,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     
     if (userId) {
         if ([self.configuration[kMPFIRGA4ShouldHashUserId] isEqualToString: @"True"]) {
-            userId = [NSString stringWithCString:mParticle::Hasher::hashString([[userId lowercaseString] UTF8String]).c_str() encoding:NSUTF8StringEncoding];
+            userId = [MPIHasher hashString:[userId lowercaseString]];
         }
     } else {
         NSLog(@"External identity type of %@ not set on the user", self.configuration[kMPFIRGA4ExternalUserIdentityType]);
