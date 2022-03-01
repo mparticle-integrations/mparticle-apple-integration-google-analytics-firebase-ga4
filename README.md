@@ -1,6 +1,6 @@
-## Google Analytics for Firebase Kit Integration
+## Firebase for Google Analytics 4 (GA4) Kit Integration
 
-This repository contains the [Google Analytics 4 for Firebase](https://firebase.google.com/) integration for the [mParticle Apple SDK](https://github.com/mParticle/mparticle-apple-sdk).
+This repository contains the [Firebase for GA4](https://firebase.google.com/docs/analytics/get-started?platform=ios)  integration for the [mParticle Apple SDK](https://github.com/mParticle/mparticle-apple-sdk).
 
 ### Adding the integration
 
@@ -18,7 +18,7 @@ This repository contains the [Google Analytics 4 for Firebase](https://firebase.
 
 ### Documentation
 
-[Google Analytics 4 for Firebase integration](https://docs.mparticle.com/integrations/google-analytics-4/event/)
+[Firebase for GA4 integration](http://docs.mparticle.com/integrations/google-analytics-4/event/)
 
 ### License
 
