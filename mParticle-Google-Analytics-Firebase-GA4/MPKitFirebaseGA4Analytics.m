@@ -1,5 +1,13 @@
 #import "MPKitFirebaseGA4Analytics.h"
-#import "Firebase.h"
+#if SWIFT_PACKAGE
+    @import Firebase;
+#else
+    #if __has_include("Firebase.h")
+        #import "Firebase.h"
+    #else
+        @import Firebase;
+    #endif
+#endif
 
 @interface MPKitFirebaseGA4Analytics () <MPKitProtocol> {
     BOOL forwardRequestsServerSide;
