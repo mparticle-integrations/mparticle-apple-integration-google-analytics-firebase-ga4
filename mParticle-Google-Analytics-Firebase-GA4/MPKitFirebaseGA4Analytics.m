@@ -346,13 +346,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
                     return kFIREventAddShippingInfo;
                 } else if ([ga4CommerceEventType containsObject:kFIREventAddPaymentInfo]) {
                     return kFIREventAddPaymentInfo;
-                } else {
-                    NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for GA4 Firebase for the custom flags to add.");
-                    return kFIREventSetCheckoutOption;
                 }
-            } else {
-                NSLog(@"Warning: Firebase has deprecated CheckoutOption in favor of 'add_shipping_info' and 'add_payment_info'. Review mParticle docs for GA4 Firebase for the custom flags to add.");
-                return kFIREventSetCheckoutOption;
             }
         }
         case MPCommerceEventActionClick:
@@ -464,12 +458,6 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     
     if (commerceEvent.transactionAttributes.revenue) {
         [parameters setObject:commerceEvent.transactionAttributes.revenue forKey:kFIRParameterValue];
-    }
-    if (commerceEvent.checkoutStep != NSNotFound) {
-        [parameters setObject:@(commerceEvent.checkoutStep) forKey:kFIRParameterCheckoutStep];
-    }
-    if (commerceEvent.checkoutOptions) {
-        [parameters setObject:commerceEvent.checkoutOptions forKey:kFIRParameterCheckoutOption];
     }
     if (commerceEvent.transactionAttributes.transactionId) {
         [parameters setObject:commerceEvent.transactionAttributes.transactionId forKey:kFIRParameterTransactionID];
