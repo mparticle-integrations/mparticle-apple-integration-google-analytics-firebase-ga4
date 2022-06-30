@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = "mParticle-Google-Analytics-Firebase-GA4"
-    s.version          = "8.1.0"
+    s.version          = "8.1.1"
     s.summary          = "Google Analytics 4 for Firebase integration for mParticle"
 
     s.description      = <<-DESC
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
     s.social_media_url = "https://twitter.com/mparticle"
     s.static_framework = true
 
-    s.ios.deployment_target = "9.0"
+    s.ios.deployment_target = "10.0"
     s.ios.source_files      = 'mParticle-Google-Analytics-Firebase-GA4/*.{h,m,mm}'
     s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.0'
     s.ios.frameworks = 'CoreTelephony', 'SystemConfiguration'
