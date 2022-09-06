@@ -2,10 +2,12 @@
 #if SWIFT_PACKAGE
     @import Firebase;
 #else
-    #if __has_include("Firebase.h")
-        #import "Firebase.h"
+    #if __has_include(<FirebaseCore/FirebaseCore.h>)
+        #import <FirebaseCore/FirebaseCore.h>
+        #import <FirebaseAnalytics/FIRAnalytics.h>
     #else
-        @import Firebase;
+        #import "FirebaseCore/FirebaseCore.h"
+        #import "FirebaseAnalytics/FIRAnalytics.h"
     #endif
 #endif
 

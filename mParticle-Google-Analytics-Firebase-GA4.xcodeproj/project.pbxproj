@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		099EA18A04EFB48EBC283A30 /* Pods_mParticle_Google_Analytics_Firebase_GA4Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57ADE6563964820A5028E82E /* Pods_mParticle_Google_Analytics_Firebase_GA4Tests.framework */; };
 		2780D0912792152200942CC7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2780D0902792152200942CC7 /* GoogleService-Info.plist */; };
 		D316BD4E217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = D316BD4C217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D316BD4F217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = D316BD4D217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m */; };
+		D39C3DE528C78D5B00432A0C /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39C3DE428C78D5B00432A0C /* dummy.swift */; };
 		D3C7855521FF6CEC00FE47D2 /* MPKitFirebaseGA4AnalyticsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D3C7855421FF6CEC00FE47D2 /* MPKitFirebaseGA4AnalyticsTests.m */; };
 		D3C7855721FF6CEC00FE47D2 /* mParticle_Google_Analytics_Firebase_GA4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D316BD32217F670500688E56 /* mParticle_Google_Analytics_Firebase_GA4.framework */; };
 		D3EC92D728BFA39600898880 /* FBLPromises.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3EC92CC28BFA39600898880 /* FBLPromises.xcframework */; };
@@ -78,32 +78,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		226C2DCC9EB073556AADF7CC /* Pods-mParticle-Google-Analytics-Firebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-Firebase.release.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-Firebase/Pods-mParticle-Google-Analytics-Firebase.release.xcconfig"; sourceTree = "<group>"; };
 		2780D0902792152200942CC7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		2C433657383672727D39D77D /* Pods-mParticle-Google-Analytics-Firebase-GA4Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-Firebase-GA4Tests.release.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-Firebase-GA4Tests/Pods-mParticle-Google-Analytics-Firebase-GA4Tests.release.xcconfig"; sourceTree = "<group>"; };
-		342132EB30BC43AB21903604 /* Pods-mParticle-Google-Analytics-FirebaseTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-FirebaseTests.debug.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-FirebaseTests/Pods-mParticle-Google-Analytics-FirebaseTests.debug.xcconfig"; sourceTree = "<group>"; };
-		551AAFA4C767BAB3620CCEA7 /* Pods_mParticle_Google_Analytics_Firebase_GA4.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mParticle_Google_Analytics_Firebase_GA4.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		57ADE6563964820A5028E82E /* Pods_mParticle_Google_Analytics_Firebase_GA4Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mParticle_Google_Analytics_Firebase_GA4Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		610647060F7E457C785D5EF7 /* Pods-mParticle-Google-Analytics-Firebase-GA4.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-Firebase-GA4.debug.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-Firebase-GA4/Pods-mParticle-Google-Analytics-Firebase-GA4.debug.xcconfig"; sourceTree = "<group>"; };
-		619F501A03C247A2E37DEE7F /* Pods-mParticle-Firebase-AnalyticsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Firebase-AnalyticsTests.debug.xcconfig"; path = "Target Support Files/Pods-mParticle-Firebase-AnalyticsTests/Pods-mParticle-Firebase-AnalyticsTests.debug.xcconfig"; sourceTree = "<group>"; };
-		68CC4538AEE8899C249C5CC2 /* Pods-mParticle-Google-Analytics-Firebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-Firebase.debug.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-Firebase/Pods-mParticle-Google-Analytics-Firebase.debug.xcconfig"; sourceTree = "<group>"; };
-		9B4577DFDEF24FE84AAC1F94 /* Pods-mParticle-Firebase-Analytics.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Firebase-Analytics.debug.xcconfig"; path = "Target Support Files/Pods-mParticle-Firebase-Analytics/Pods-mParticle-Firebase-Analytics.debug.xcconfig"; sourceTree = "<group>"; };
-		9E4AE5AD50BC11526F01EDAB /* Pods-mParticle-Google-Analytics-Firebase-GA4.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-Firebase-GA4.release.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-Firebase-GA4/Pods-mParticle-Google-Analytics-Firebase-GA4.release.xcconfig"; sourceTree = "<group>"; };
-		C36975864B0BB8F3A6A952E3 /* Pods-mParticle-Firebase-AnalyticsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Firebase-AnalyticsTests.release.xcconfig"; path = "Target Support Files/Pods-mParticle-Firebase-AnalyticsTests/Pods-mParticle-Firebase-AnalyticsTests.release.xcconfig"; sourceTree = "<group>"; };
-		C7B8FAD18792236712DCE464 /* Pods-mParticle-Firebase-Analytics.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Firebase-Analytics.release.xcconfig"; path = "Target Support Files/Pods-mParticle-Firebase-Analytics/Pods-mParticle-Firebase-Analytics.release.xcconfig"; sourceTree = "<group>"; };
 		D3085197219B605900D1C15A /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Carthage/Build/iOS/OCMock.framework; sourceTree = "<group>"; };
 		D316BD32217F670500688E56 /* mParticle_Google_Analytics_Firebase_GA4.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = mParticle_Google_Analytics_Firebase_GA4.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D316BD36217F670600688E56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D316BD4C217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPKitFirebaseGA4Analytics.h; sourceTree = "<group>"; };
 		D316BD4D217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPKitFirebaseGA4Analytics.m; sourceTree = "<group>"; };
-		D316BD52217F6D8B00688E56 /* OptimizelySDKDatafileManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OptimizelySDKDatafileManager.framework; path = Carthage/Build/iOS/OptimizelySDKDatafileManager.framework; sourceTree = "<group>"; };
-		D316BD53217F6D8B00688E56 /* OptimizelySDKiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OptimizelySDKiOS.framework; path = Carthage/Build/iOS/OptimizelySDKiOS.framework; sourceTree = "<group>"; };
-		D316BD54217F6D8B00688E56 /* OptimizelySDKShared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OptimizelySDKShared.framework; path = Carthage/Build/iOS/OptimizelySDKShared.framework; sourceTree = "<group>"; };
-		D316BD55217F6D8B00688E56 /* OptimizelySDKUserProfileService.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OptimizelySDKUserProfileService.framework; path = Carthage/Build/iOS/OptimizelySDKUserProfileService.framework; sourceTree = "<group>"; };
-		D316BD56217F6D8B00688E56 /* OptimizelySDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OptimizelySDKCore.framework; path = Carthage/Build/iOS/OptimizelySDKCore.framework; sourceTree = "<group>"; };
-		D316BD57217F6D8B00688E56 /* OptimizelySDKEventDispatcher.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OptimizelySDKEventDispatcher.framework; path = Carthage/Build/iOS/OptimizelySDKEventDispatcher.framework; sourceTree = "<group>"; };
 		D316BD5E217F6DAA00688E56 /* mParticle_Apple_SDK.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = mParticle_Apple_SDK.framework.dSYM; path = Carthage/Build/iOS/mParticle_Apple_SDK.framework.dSYM; sourceTree = "<group>"; };
 		D316BD60217F6DC800688E56 /* mParticle_Apple_SDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = mParticle_Apple_SDK.framework; path = Carthage/Build/iOS/mParticle_Apple_SDK.framework; sourceTree = "<group>"; };
+		D39C3DE428C78D5B00432A0C /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		D3C7855221FF6CEB00FE47D2 /* mParticle-Google-Analytics-Firebase-GA4Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mParticle-Google-Analytics-Firebase-GA4Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3C7855421FF6CEC00FE47D2 /* MPKitFirebaseGA4AnalyticsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPKitFirebaseGA4AnalyticsTests.m; sourceTree = "<group>"; };
 		D3C7855621FF6CEC00FE47D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -119,8 +102,6 @@
 		D3EC92D528BFA39600898880 /* GoogleDataTransport.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleDataTransport.xcframework; path = Carthage/Build/GoogleDataTransport.xcframework; sourceTree = "<group>"; };
 		D3EC92D628BFA39600898880 /* GoogleUtilities.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleUtilities.xcframework; path = Carthage/Build/GoogleUtilities.xcframework; sourceTree = "<group>"; };
 		D3EC92EE28BFA39900898880 /* nanopb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = nanopb.xcframework; path = Carthage/Build/nanopb.xcframework; sourceTree = "<group>"; };
-		EC2CEA29C2E5379053D304BB /* Pods-mParticle-Google-Analytics-Firebase-GA4Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-Firebase-GA4Tests.debug.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-Firebase-GA4Tests/Pods-mParticle-Google-Analytics-Firebase-GA4Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		FDDBC85EC4380F73E4F60755 /* Pods-mParticle-Google-Analytics-FirebaseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mParticle-Google-Analytics-FirebaseTests.release.xcconfig"; path = "Target Support Files/Pods-mParticle-Google-Analytics-FirebaseTests/Pods-mParticle-Google-Analytics-FirebaseTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,32 +130,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3C7855721FF6CEC00FE47D2 /* mParticle_Google_Analytics_Firebase_GA4.framework in Frameworks */,
-				099EA18A04EFB48EBC283A30 /* Pods_mParticle_Google_Analytics_Firebase_GA4Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8900B9495CB76E34AFC3C04A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				9B4577DFDEF24FE84AAC1F94 /* Pods-mParticle-Firebase-Analytics.debug.xcconfig */,
-				C7B8FAD18792236712DCE464 /* Pods-mParticle-Firebase-Analytics.release.xcconfig */,
-				619F501A03C247A2E37DEE7F /* Pods-mParticle-Firebase-AnalyticsTests.debug.xcconfig */,
-				C36975864B0BB8F3A6A952E3 /* Pods-mParticle-Firebase-AnalyticsTests.release.xcconfig */,
-				68CC4538AEE8899C249C5CC2 /* Pods-mParticle-Google-Analytics-Firebase.debug.xcconfig */,
-				226C2DCC9EB073556AADF7CC /* Pods-mParticle-Google-Analytics-Firebase.release.xcconfig */,
-				342132EB30BC43AB21903604 /* Pods-mParticle-Google-Analytics-FirebaseTests.debug.xcconfig */,
-				FDDBC85EC4380F73E4F60755 /* Pods-mParticle-Google-Analytics-FirebaseTests.release.xcconfig */,
-				610647060F7E457C785D5EF7 /* Pods-mParticle-Google-Analytics-Firebase-GA4.debug.xcconfig */,
-				9E4AE5AD50BC11526F01EDAB /* Pods-mParticle-Google-Analytics-Firebase-GA4.release.xcconfig */,
-				EC2CEA29C2E5379053D304BB /* Pods-mParticle-Google-Analytics-Firebase-GA4Tests.debug.xcconfig */,
-				2C433657383672727D39D77D /* Pods-mParticle-Google-Analytics-Firebase-GA4Tests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		D316BD28217F670500688E56 = {
 			isa = PBXGroup;
 			children = (
@@ -182,7 +143,6 @@
 				D3C7855321FF6CEB00FE47D2 /* mParticle-Google-Analytics-Firebase-GA4Tests */,
 				D316BD33217F670500688E56 /* Products */,
 				D316BD51217F6D8A00688E56 /* Frameworks */,
-				8900B9495CB76E34AFC3C04A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -201,6 +161,7 @@
 				D316BD36217F670600688E56 /* Info.plist */,
 				D316BD4C217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h */,
 				D316BD4D217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m */,
+				D39C3DE428C78D5B00432A0C /* dummy.swift */,
 			);
 			path = "mParticle-Google-Analytics-Firebase-GA4";
 			sourceTree = "<group>";
@@ -223,14 +184,6 @@
 				D3085197219B605900D1C15A /* OCMock.framework */,
 				D316BD60217F6DC800688E56 /* mParticle_Apple_SDK.framework */,
 				D316BD5E217F6DAA00688E56 /* mParticle_Apple_SDK.framework.dSYM */,
-				D316BD56217F6D8B00688E56 /* OptimizelySDKCore.framework */,
-				D316BD52217F6D8B00688E56 /* OptimizelySDKDatafileManager.framework */,
-				D316BD57217F6D8B00688E56 /* OptimizelySDKEventDispatcher.framework */,
-				D316BD53217F6D8B00688E56 /* OptimizelySDKiOS.framework */,
-				D316BD54217F6D8B00688E56 /* OptimizelySDKShared.framework */,
-				D316BD55217F6D8B00688E56 /* OptimizelySDKUserProfileService.framework */,
-				551AAFA4C767BAB3620CCEA7 /* Pods_mParticle_Google_Analytics_Firebase_GA4.framework */,
-				57ADE6563964820A5028E82E /* Pods_mParticle_Google_Analytics_Firebase_GA4Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -263,7 +216,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D316BD46217F670600688E56 /* Build configuration list for PBXNativeTarget "mParticle-Google-Analytics-Firebase-GA4" */;
 			buildPhases = (
-				0AC17B5A8948DA5FCF528C9D /* [CP] Check Pods Manifest.lock */,
 				D316BD2D217F670500688E56 /* Sources */,
 				D316BD2E217F670500688E56 /* Frameworks */,
 				D316BD2F217F670500688E56 /* Headers */,
@@ -305,11 +257,12 @@
 		D316BD29217F670500688E56 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = mparticle;
 				TargetAttributes = {
 					D316BD31217F670500688E56 = {
 						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 1340;
 					};
 					D3C7855121FF6CEB00FE47D2 = {
 						CreatedOnToolsVersion = 10.1;
@@ -353,28 +306,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0AC17B5A8948DA5FCF528C9D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-mParticle-Google-Analytics-Firebase-GA4-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2338CCEAE4912AF68986FA33 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -421,6 +352,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D39C3DE528C78D5B00432A0C /* dummy.swift in Sources */,
 				D316BD4F217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +402,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -496,7 +429,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -531,6 +464,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -551,9 +485,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -562,39 +497,8 @@
 		};
 		D316BD47217F670600688E56 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 610647060F7E457C785D5EF7 /* Pods-mParticle-Google-Analytics-Firebase-GA4.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = DLD43Y3TRP;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = "$(SRCROOT)/mParticle-Google-Analytics-Firebase-GA4/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mparticle.mParticle-Google-Analytics-Firebase-GA4";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_WORKSPACE = YES;
-			};
-			name = Debug;
-		};
-		D316BD48217F670600688E56 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9E4AE5AD50BC11526F01EDAB /* Pods-mParticle-Google-Analytics-Firebase-GA4.release.xcconfig */;
-			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -602,6 +506,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -617,6 +522,43 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mparticle.mParticle-Google-Analytics-Firebase-GA4";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_WORKSPACE = YES;
+			};
+			name = Debug;
+		};
+		D316BD48217F670600688E56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = DLD43Y3TRP;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = arm64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/mParticle-Google-Analytics-Firebase-GA4/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mparticle.mParticle-Google-Analytics-Firebase-GA4";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
 			};
@@ -624,8 +566,8 @@
 		};
 		D3C7855A21FF6CEC00FE47D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EC2CEA29C2E5379053D304BB /* Pods-mParticle-Google-Analytics-Firebase-GA4Tests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "mParticle-Google-Analytics-Firebase-GA4Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -643,8 +585,8 @@
 		};
 		D3C7855B21FF6CEC00FE47D2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2C433657383672727D39D77D /* Pods-mParticle-Google-Analytics-Firebase-GA4Tests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "mParticle-Google-Analytics-Firebase-GA4Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
