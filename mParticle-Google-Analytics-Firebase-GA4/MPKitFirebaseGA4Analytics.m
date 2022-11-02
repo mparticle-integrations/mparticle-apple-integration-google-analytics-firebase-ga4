@@ -115,14 +115,14 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
             eventName = kFIREventViewPromotion;
         }
         for (MPPromotion *promotion in commerceEvent.promotionContainer.promotions) {
-            parameters = [self getParameterForPromotion:promotion CommerceEvent:commerceEvent];
+            parameters = [self getParameterForPromotion:promotion commerceEvent:commerceEvent];
             
             [FIRAnalytics logEventWithName:eventName parameters:parameters];
         }
     } else if (commerceEvent.impressions) {
         eventName = kFIREventViewItemList;
         for (NSString *impressionKey in commerceEvent.impressions) {
-            parameters = [self getParameterForImpression:impressionKey CommerceEvent:commerceEvent products:commerceEvent.impressions[impressionKey]];
+            parameters = [self getParameterForImpression:impressionKey commerceEvent:commerceEvent products:commerceEvent.impressions[impressionKey]];
             
             [FIRAnalytics logEventWithName:eventName parameters:parameters];
         }
@@ -364,7 +364,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     }
 }
 
-- (NSDictionary<NSString *, id> *)getParameterForPromotion:(MPPromotion *)promotion CommerceEvent:(MPCommerceEvent *)commerceEvent {
+- (NSDictionary<NSString *, id> *)getParameterForPromotion:(MPPromotion *)promotion commerceEvent:(MPCommerceEvent *)commerceEvent {
     NSMutableDictionary<NSString *, id> *parameters = [[self standardizeValues:commerceEvent.customAttributes forEvent:YES] mutableCopy];
     
     if (promotion.promotionId) {
@@ -383,7 +383,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     return parameters;
 }
 
-- (NSDictionary<NSString *, id> *)getParameterForImpression:(NSString *)impressionKey  CommerceEvent:(MPCommerceEvent *)commerceEvent products:(NSSet<MPProduct *> *)products {
+- (NSDictionary<NSString *, id> *)getParameterForImpression:(NSString *)impressionKey  commerceEvent:(MPCommerceEvent *)commerceEvent products:(NSSet<MPProduct *> *)products {
     NSMutableDictionary<NSString *, id> *parameters = [[self standardizeValues:commerceEvent.customAttributes forEvent:YES] mutableCopy];
     
     [parameters setObject:impressionKey forKey:kFIRParameterItemListID];
