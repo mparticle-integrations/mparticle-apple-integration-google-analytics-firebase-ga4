@@ -70,8 +70,9 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     } else {
         if ([self.configuration[kMPFIRGA4ForwardRequestsServerSide] isEqualToString: @"True"]) {
             forwardRequestsServerSide = true;
-            [self updateInstanceIDIntegration];
         }
+        
+        [self updateInstanceIDIntegration];
         
         _started = YES;
         
