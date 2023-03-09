@@ -1,3 +1,3 @@
-binary "https://dl.google.com/dl/firebase/ios/carthage/FirebaseAnalyticsBinary.json" ~> 9.0
+binary "https://dl.google.com/dl/firebase/ios/carthage/FirebaseAnalyticsBinary.json" ~> 10.6
 github "mparticle/mparticle-apple-sdk" ~> 8.0
 
