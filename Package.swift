@@ -27,7 +27,7 @@ let package = Package(
               .product(name: "FirebaseAnalytics", package: "Firebase"),
             ],
             path: "mParticle-Google-Analytics-Firebase-GA4",
-            exclude: ["Info.plist"],
+            exclude: ["Info.plist", "dummy.swift"],
             publicHeadersPath: "."),
     ]
 )
