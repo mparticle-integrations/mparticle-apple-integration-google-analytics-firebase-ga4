@@ -17,7 +17,7 @@ let package = Package(
                .upToNextMajor(from: "8.0.0")),
       .package(name: "Firebase",
                url: "https://github.com/firebase/firebase-ios-sdk.git",
-               .upToNextMajor(from: "9.0.0")),
+               .upToNextMajor(from: "10.6.0")),
     ],
     targets: [
         .target(
@@ -27,7 +27,7 @@ let package = Package(
               .product(name: "FirebaseAnalytics", package: "Firebase"),
             ],
             path: "mParticle-Google-Analytics-Firebase-GA4",
-            exclude: ["Info.plist"],
+            exclude: ["Info.plist", "dummy.swift"],
             publicHeadersPath: "."),
     ]
 )

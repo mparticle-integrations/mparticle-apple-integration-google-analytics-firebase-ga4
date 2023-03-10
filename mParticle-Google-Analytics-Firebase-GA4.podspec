@@ -19,6 +19,6 @@ Pod::Spec.new do |s|
     s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.0'
     s.ios.frameworks = 'CoreTelephony', 'SystemConfiguration'
     s.libraries = 'z'
-    s.ios.dependency 'Firebase/Core', '~> 9.0'
+    s.ios.dependency 'Firebase/Core', '~> 10.6'
 
 end
