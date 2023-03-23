@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "mParticle-Google-Analytics-Firebase-GA4",
-    platforms: [ .iOS(.v11) ],
+    platforms: [ .iOS(.v11), .tvOS(.v12) ],
     products: [
         .library(
             name: "mParticle-Google-Analytics-Firebase-GA4",
