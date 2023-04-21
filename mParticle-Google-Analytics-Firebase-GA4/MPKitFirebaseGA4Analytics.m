@@ -38,6 +38,7 @@ static NSString *const reservedPrefixThree = @"ga_";
 static NSString *const firebaseAllowedCharacters = @"_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static NSString *const instanceIdIntegrationKey = @"app_instance_id";
+static NSString *const invalidFirebaseKey = @"invalid_ga4_key";
 
 const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME_INDEX = 39;
 const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX = 23;
@@ -168,16 +169,20 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
 }
 
 - (NSString *)standardizeNameOrKey:(NSString *)nameOrKey forEvent:(BOOL)forEvent {
-    NSCharacterSet *whitespacesSet = [NSCharacterSet whitespaceCharacterSet];
     NSMutableCharacterSet *firebaseAllowedCharacterSet = [NSMutableCharacterSet characterSetWithCharactersInString:firebaseAllowedCharacters];
-    [firebaseAllowedCharacterSet formUnionWithCharacterSet:whitespacesSet];
     NSCharacterSet *notAllowedChars = [firebaseAllowedCharacterSet invertedSet];
-    NSString* allowedNameOrKey = [[nameOrKey componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
+    NSString* truncatedString = nameOrKey;
+    NSCharacterSet *aTozCharacterSet = [NSCharacterSet characterSetWithCharactersInString:aToZCharacters];
 
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"  +" options:NSRegularExpressionCaseInsensitive error:nil];
-    NSString *trimmedString = [regex stringByReplacingMatchesInString:allowedNameOrKey options:0 range:NSMakeRange(0, [allowedNameOrKey length]) withTemplate:@" "];
+    // Remove any non-alphabetic characters from the beginning of the string
+    while (![aTozCharacterSet characterIsMember:[truncatedString characterAtIndex:0]]) {
+        truncatedString = [truncatedString substringFromIndex:1];
+    }
+    
+    // Replace all invalid characters with an underscore
+    NSString* standardizedString = [[truncatedString componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@"_"];
 
-    NSString *standardizedString = [trimmedString stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+    // Ensure no Firebase reserved prefix's are being used
     if (standardizedString.length > reservedPrefixOne.length && [standardizedString hasPrefix:reservedPrefixOne]) {
         standardizedString = [standardizedString substringFromIndex:reservedPrefixOne.length];
     } else if (standardizedString.length > reservedPrefixTwo.length && [standardizedString hasPrefix:reservedPrefixTwo]) {
@@ -186,20 +191,20 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
         standardizedString = [standardizedString substringFromIndex:reservedPrefixThree.length];
     }
     
-    NSCharacterSet *letterSet = [NSCharacterSet characterSetWithCharactersInString:aToZCharacters];
-    
-    while (![letterSet characterIsMember:[standardizedString characterAtIndex:0]] && standardizedString.length > 1) {
-        standardizedString = [standardizedString substringFromIndex:1];
-    }
-    
+    // Truncate to max characters allowed by GA4
     if (forEvent) {
-        if (standardizedString.length > FIR_MAX_CHARACTERS_EVENT_NAME_INDEX) {
+        if (standardizedString.length > FIR_MAX_CHARACTERS_EVENT_NAME_INDEX + 1) {
             standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_EVENT_NAME_INDEX];
         }
     } else {
-        if (standardizedString.length > FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX) {
+        if (standardizedString.length > FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX + 1) {
             standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX];
         }
+    }
+    
+    // If empty set to invalid GA4 key constant
+    if (standardizedString.length == 0) {
+        standardizedString = invalidFirebaseKey;
     }
     
     return standardizedString;
@@ -209,11 +214,11 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     id standardizedValue = value;
     if ([value isKindOfClass:[NSString class]]) {
         if (forEvent) {
-            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX) {
+            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX + 1) {
                 standardizedValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX];
             }
         } else {
-            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX) {
+            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX + 1) {
                 standardizedValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX];
             }
         }
