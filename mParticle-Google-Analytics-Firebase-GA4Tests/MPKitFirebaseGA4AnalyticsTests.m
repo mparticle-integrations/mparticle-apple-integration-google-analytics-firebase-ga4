@@ -8,6 +8,7 @@
 
 @interface MPKitFirebaseGA4Analytics()
 - (NSString *)standardizeNameOrKey:(NSString *)nameOrKey forEvent:(BOOL)forEvent;
+- (id)standardizeValue:(id)value forEvent:(BOOL)forEvent;
 - (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters;
 - (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent;
 @end
@@ -108,14 +109,47 @@
 - (void)testSanitization {
     MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
     
+    NSArray *badPrefixes = @["firebase_event_name",
+                             "google_event_name",
+                             "ga_event_name"];
+    for (badPrefix in badPrefixes) {
+        XCTAssertEqualObjects([exampleKit standardizeNameOrKey:badPrefix forEvent:YES], @"event_name");
+    }
+    
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event name" forEvent:YES], @"event_name");
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event_name " forEvent:YES], @"event_name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:YES], @"event_name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:YES], @"event_name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:YES], @"event__name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:YES], @"event___name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event! - ?name " forEvent:YES], @"event_____name_");
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event name" forEvent:NO], @"event_name");
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event_name " forEvent:NO], @"event_name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:NO], @"event_name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:NO], @"event_name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:NO], @"event__name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:NO], @"event___name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event! - ?name " forEvent:NO], @"event_____name_");
+    
+    NSArray *badStarts = @["!@#$%^&*()_+=[]{}|'\"?><:;event_name",
+                           "_event_name",
+                           "   event_name",
+                           "_event_name"];
+    
+    for (badStart in badStarts) {
+        XCTAssertEqualObjects([exampleKit standardizeNameOrKey:badStart forEvent:YES], @"event_name");
+    }
+    
+    NSString *tooLong = @"abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890";
+    XCTAssertEqual(40, [exampleKit standardizeNameOrKey:tooLong forEvent:YES].length)
+    XCTAssertEqual(24, [exampleKit standardizeNameOrKey:tooLong forEvent:NO].length)
+    XCTAssertEqual(100, [exampleKit standardizeValue:tooLong forEvent:YES].length)
+    XCTAssertEqual(36, [exampleKit standardizeValue:tooLong forEvent:YES].length)
+    
+    NSArray *emptyStrings = @["!@#$%^&*()_+=[]{}|'\"?><:;",
+                              "_1234567890",
+                              " ",
+                              ""]
+    )
+    for (emptyString in emptyStrings) {
+        XCTAssertEqualObjects([exampleKit standardizeNameOrKey:badStart forEvent:YES], @"invalid_ga4_key");
+    }
 }
 
 - (void)testCommerceEventCheckoutOptions {
