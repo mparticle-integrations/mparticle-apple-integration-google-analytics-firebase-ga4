@@ -175,12 +175,15 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     NSCharacterSet *aTozCharacterSet = [NSCharacterSet characterSetWithCharactersInString:aToZCharacters];
 
     // Remove any non-alphabetic characters from the beginning of the string
-    while (![aTozCharacterSet characterIsMember:[truncatedString characterAtIndex:0]]) {
-        truncatedString = [truncatedString substringFromIndex:1];
+    NSString* standardizedString = truncatedString;
+    if (forEvent) {
+        while (![aTozCharacterSet characterIsMember:[truncatedString characterAtIndex:0]]) {
+            truncatedString = [truncatedString substringFromIndex:1];
+        }
+        
+        // Replace all invalid characters with an underscore
+        standardizedString = [[truncatedString componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@"_"];
     }
-    
-    // Replace all invalid characters with an underscore
-    NSString* standardizedString = [[truncatedString componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@"_"];
 
     // Ensure no Firebase reserved prefix's are being used
     if (standardizedString.length > reservedPrefixOne.length && [standardizedString hasPrefix:reservedPrefixOne]) {

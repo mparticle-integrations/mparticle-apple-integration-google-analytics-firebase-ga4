@@ -121,11 +121,16 @@
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:YES], @"event__name_");
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:YES], @"event___name_");
     XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event! - ?name " forEvent:YES], @"event_____name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event name" forEvent:NO], @"event_name");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event_name " forEvent:NO], @"event_name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:NO], @"event__name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:NO], @"event___name_");
-    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event! - ?name " forEvent:NO], @"event_____name_");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event name" forEvent:NO], @"event name");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event_name " forEvent:NO], @"event_name ");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event  name " forEvent:NO], @"event  name ");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event - name " forEvent:NO], @"event - name ");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event! - ?name " forEvent:NO], @"event! - ?name ");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"event! - ?name " forEvent:NO], @"event! - ?name ");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"!@#$%^&*()_+=[]{}|'\"?><:;event_name" forEvent:NO], @"!@#$%^&*()_+=[]{}|'\"?><:;event_name");
+    XCTAssertEqualObjects([exampleKit standardizeNameOrKey:@"   event_name" forEvent:NO], @"   event_name");
+
+
     
     NSArray *badStarts = @["!@#$%^&*()_+=[]{}|'\"?><:;event_name",
                            "_event_name",
