@@ -40,10 +40,10 @@ static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 static NSString *const instanceIdIntegrationKey = @"app_instance_id";
 static NSString *const invalidFirebaseKey = @"invalid_ga4_key";
 
-const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME_INDEX = 39;
-const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX = 23;
-const NSInteger FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX = 99;
-const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
+const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME = 40;
+const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME = 24;
+const NSInteger FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE = 100;
+const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
 
 #pragma mark Static Methods
 
@@ -177,7 +177,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     // Remove any non-alphabetic characters from the beginning of the string
     NSString* standardizedString = truncatedString;
     if (forEvent) {
-        while (![aTozCharacterSet characterIsMember:[truncatedString characterAtIndex:0]]) {
+        while (truncatedString.length > 0 && ![aTozCharacterSet characterIsMember:[truncatedString characterAtIndex:0]]) {
             truncatedString = [truncatedString substringFromIndex:1];
         }
         
@@ -196,12 +196,12 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     
     // Truncate to max characters allowed by GA4
     if (forEvent) {
-        if (standardizedString.length > FIR_MAX_CHARACTERS_EVENT_NAME_INDEX + 1) {
-            standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_EVENT_NAME_INDEX];
+        if (standardizedString.length > FIR_MAX_CHARACTERS_EVENT_NAME) {
+            standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_EVENT_NAME];
         }
     } else {
-        if (standardizedString.length > FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX + 1) {
-            standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_NAME_INDEX];
+        if (standardizedString.length > FIR_MAX_CHARACTERS_IDENTITY_NAME) {
+            standardizedString = [standardizedString substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_NAME];
         }
     }
     
@@ -213,21 +213,21 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX = 35;
     return standardizedString;
 }
 
-- (id)standardizeValue:(id)value forEvent:(BOOL)forEvent {
-    id standardizedValue = value;
+- (NSString *)standardizeValue:(id)value forEvent:(BOOL)forEvent {
+    NSString *finalValue = @"";
     if ([value isKindOfClass:[NSString class]]) {
         if (forEvent) {
-            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX + 1) {
-                standardizedValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE_INDEX];
+            if (((NSString *)value).length > FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE) {
+                finalValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE];
             }
         } else {
-            if (((NSString *)standardizedValue).length > FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX + 1) {
-                standardizedValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE_INDEX];
+            if (((NSString *)value).length > FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE) {
+                finalValue = [(NSString *)value substringToIndex:FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE];
             }
         }
     }
     
-    return standardizedValue;
+    return finalValue;
 }
 
 - (NSDictionary<NSString *, id> *)standardizeValues:(NSDictionary<NSString *, id> *)values forEvent:(BOOL)forEvent {
