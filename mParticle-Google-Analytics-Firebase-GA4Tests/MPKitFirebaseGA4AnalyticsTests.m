@@ -1,6 +1,7 @@
 #import <XCTest/XCTest.h>
 #import "MPKitFirebaseGA4Analytics.h"
 #import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAnalytics/FIRAnalytics.h>
 
 @interface FIRApp()
 + (void)resetApps;
@@ -156,33 +157,28 @@
     }
 }
 
-//- (void)testCommerceEventCheckoutOptions {
-//    MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
-//    [exampleKit didFinishLaunchingWithConfiguration:@{}];
-//
-//    // Test fallback when not using GA4
-//    MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
-//    NSDictionary<NSString *, id> *parameters = [exampleKit getParameterForCommerceEvent:event];
-//    NSString *eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
-//    XCTAssertEqualObjects(NSStringFromEventTypekFIREventSetCheckoutOption, eventName);
-//
-//    // Test kFIREventAddShippingInfo
-//    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
-//    [event addCustomFlag:kFIREventAddShippingInfo withKey:kMPFIRGA4CommerceEventType];
-//    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
-//    XCTAssertEqualObjects(kFIREventAddShippingInfo, eventName);
-//
-//    // Test kFIREventAddPaymentInfo
-//    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
-//    [event addCustomFlag:kFIREventAddPaymentInfo withKey:kMPFIRGA4CommerceEventType];
-//    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
-//    XCTAssertEqualObjects(kFIREventAddPaymentInfo, eventName);
-//
-//    // Test both (defaults to kFIREventAddShippingInfo)
-//    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
-//    [event addCustomFlags:@[kFIREventAddShippingInfo, kFIREventAddPaymentInfo] withKey:kMPFIRGA4CommerceEventType];
-//    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
-//    XCTAssertEqualObjects(kFIREventAddShippingInfo, eventName);
-//}
+- (void)testCommerceEventCheckoutOptions {
+    MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
+    [exampleKit didFinishLaunchingWithConfiguration:@{}];
+    
+    // Test kFIREventAddShippingInfo
+    MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
+    [event addCustomFlag:kFIREventAddShippingInfo withKey:kMPFIRGA4CommerceEventType];
+    NSDictionary<NSString *, id> *parameters = [exampleKit getParameterForCommerceEvent:event];
+    NSString *eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
+    XCTAssertEqualObjects(kFIREventAddShippingInfo, eventName);
+
+    // Test kFIREventAddPaymentInfo
+    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
+    [event addCustomFlag:kFIREventAddPaymentInfo withKey:kMPFIRGA4CommerceEventType];
+    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
+    XCTAssertEqualObjects(kFIREventAddPaymentInfo, eventName);
+
+    // Test both (defaults to kFIREventAddShippingInfo)
+    event = [[MPCommerceEvent alloc] initWithAction:MPCommerceEventActionCheckoutOptions];
+    [event addCustomFlags:@[kFIREventAddShippingInfo, kFIREventAddPaymentInfo] withKey:kMPFIRGA4CommerceEventType];
+    eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
+    XCTAssertEqualObjects(kFIREventAddShippingInfo, eventName);
+}
 
 @end
