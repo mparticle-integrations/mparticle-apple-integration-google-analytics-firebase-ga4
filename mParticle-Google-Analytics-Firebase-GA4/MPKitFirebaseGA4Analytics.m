@@ -44,6 +44,8 @@ const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME = 40;
 const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME = 24;
 const NSInteger FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE = 100;
 const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
+const NSInteger FIR_MAX_EVENT_PARAMETERS_PROPERTIES = 25;
+const NSInteger FIR_MAX_ITEM_PARAMETERS = 10;
 
 #pragma mark Static Methods
 
@@ -214,7 +216,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
 }
 
 - (NSString *)standardizeValue:(id)value forEvent:(BOOL)forEvent {
-    NSString *finalValue = @"";
+    NSString *finalValue = value;
     if ([value isKindOfClass:[NSString class]]) {
         if (forEvent) {
             if (((NSString *)value).length > FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE) {
@@ -238,6 +240,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
         standardizedValue[standardizedKey] = [self standardizeValue:values[key] forEvent:forEvent];
     }
     
+    [self limitDictionary:standardizedValue maxCount:FIR_MAX_EVENT_PARAMETERS_PROPERTIES];
     return standardizedValue;
 }
 
@@ -389,6 +392,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
         [parameters setObject:promotion.position forKey:kFIRParameterCreativeSlot];
     }
     
+    [self limitDictionary:parameters maxCount:FIR_MAX_EVENT_PARAMETERS_PROPERTIES];
     return parameters;
 }
 
@@ -419,6 +423,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
                 [productParameters setObject:product.price forKey:kFIRParameterPrice];
             }
             
+            [self limitDictionary:productParameters maxCount:FIR_MAX_ITEM_PARAMETERS];
             [itemArray addObject:productParameters];
         }
         
@@ -427,6 +432,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
         }
     }
     
+    [self limitDictionary:parameters maxCount:FIR_MAX_EVENT_PARAMETERS_PROPERTIES];
     return parameters;
 }
 
@@ -453,6 +459,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
             [productParameters setObject:product.price forKey:kFIRParameterPrice];
         }
         
+        [self limitDictionary:productParameters maxCount:FIR_MAX_ITEM_PARAMETERS];
         [itemArray addObject:productParameters];
     }
     
@@ -503,6 +510,7 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
         }
     }
     
+    [self limitDictionary:parameters maxCount:FIR_MAX_EVENT_PARAMETERS_PROPERTIES];
     return parameters;
 }
 
@@ -554,6 +562,16 @@ const NSInteger FIR_MAX_CHARACTERS_IDENTITY_ATTR_VALUE = 36;
     if (appInstanceID.length) {
         NSDictionary<NSString *, NSString *> *integrationAttributes = @{instanceIdIntegrationKey:appInstanceID};
         [[MParticle sharedInstance] setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
+    }
+}
+
+- (void)limitDictionary:(NSMutableDictionary *)dictionary maxCount:(int)maxCount {
+    if ([dictionary count] > maxCount) {
+        NSMutableArray *dictionaryKeys = [dictionary.allKeys mutableCopy];
+        [dictionaryKeys sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+        for (int i = maxCount; i < dictionaryKeys.count; i++) {
+            [dictionary removeObjectForKey:dictionaryKeys[i]];
+        }
     }
 }
 
