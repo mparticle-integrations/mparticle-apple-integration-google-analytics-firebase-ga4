@@ -10,6 +10,9 @@ let package = Package(
         .library(
             name: "mParticle-Google-Analytics-Firebase-GA4",
             targets: ["mParticle-Google-Analytics-Firebase-GA4"]),
+        .library(
+            name: "mParticle-Google-Analytics-Firebase-GA4-NoLocation",
+            targets: ["mParticle-Google-Analytics-Firebase-GA4-NoLocation"])
     ],
     dependencies: [
       .package(name: "mParticle-Apple-SDK",
@@ -23,10 +26,19 @@ let package = Package(
         .target(
             name: "mParticle-Google-Analytics-Firebase-GA4",
             dependencies: [
-              .byName(name: "mParticle-Apple-SDK"),
+              .product(name: "mParticle-Apple-SDK", package: "mParticle-Apple-SDK"),
               .product(name: "FirebaseAnalytics", package: "Firebase"),
             ],
             path: "mParticle-Google-Analytics-Firebase-GA4",
+            exclude: ["Info.plist", "dummy.swift"],
+            publicHeadersPath: "."),
+        .target(
+            name: "mParticle-Google-Analytics-Firebase-GA4-NoLocation",
+            dependencies: [
+              .product(name: "mParticle-Apple-SDK-NoLocation", package: "mParticle-Apple-SDK"),
+              .product(name: "FirebaseAnalytics", package: "Firebase"),
+            ],
+            path: "SPM/mParticle-Google-Analytics-Firebase-GA4-NoLocation",
             exclude: ["Info.plist", "dummy.swift"],
             publicHeadersPath: "."),
     ]
