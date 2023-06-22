@@ -11,6 +11,8 @@
     #endif
 #endif
 
+__weak static NSString* (^customNameStandardization)(NSString* name) = nil;
+
 @interface MPKitFirebaseGA4Analytics () <MPKitProtocol> {
     BOOL forwardRequestsServerSide;
 }
@@ -58,6 +60,13 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 10;
     [MParticle registerExtension:kitRegister];
 }
 
++ (void)setCustomNameStandardization:(NSString*_Nonnull(^_Nullable)(NSString* _Nonnull name))standardization {
+    customNameStandardization = standardization;
+}
+
++ (NSString*_Nonnull(^_Nullable)(NSString* _Nonnull name))customNameStandardization {
+    return customNameStandardization;
+}
 
 - (MPKitExecStatus *)execStatus:(MPKitReturnCode)returnCode {
     return [[MPKitExecStatus alloc] initWithSDKCode:self.class.kitCode returnCode:returnCode];
@@ -171,9 +180,14 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 10;
 }
 
 - (NSString *)standardizeNameOrKey:(NSString *)nameOrKey forEvent:(BOOL)forEvent {
+    NSString *initialValue = [nameOrKey copy];
+    if ([MPKitFirebaseGA4Analytics customNameStandardization]) {
+        initialValue = [MPKitFirebaseGA4Analytics customNameStandardization](initialValue);
+    }
+    
     NSMutableCharacterSet *firebaseAllowedCharacterSet = [NSMutableCharacterSet characterSetWithCharactersInString:firebaseAllowedCharacters];
     NSCharacterSet *notAllowedChars = [firebaseAllowedCharacterSet invertedSet];
-    NSString* truncatedString = nameOrKey;
+    NSString* truncatedString = initialValue;
     NSCharacterSet *aTozCharacterSet = [NSCharacterSet characterSetWithCharactersInString:aToZCharacters];
 
     // Remove any non-alphabetic characters from the beginning of the string
