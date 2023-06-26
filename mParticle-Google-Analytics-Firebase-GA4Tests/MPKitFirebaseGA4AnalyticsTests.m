@@ -27,6 +27,7 @@
 }
 
 - (void)tearDown {
+    [MPKitFirebaseGA4Analytics setCustomNameStandardization:nil];
     [FIRApp resetApps];
 }
 
@@ -154,6 +155,25 @@
                               @""];
     for (NSString *emptyString in emptyStrings) {
         XCTAssertEqualObjects([exampleKit standardizeNameOrKey:emptyString forEvent:YES], @"invalid_ga4_key");
+    }
+}
+
+- (void)testSanitizationCustom {
+    MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
+    
+    NSArray *customTest = @[@"firebase_event_name",
+                             @"google_event_name",
+                             @"ga_event_name"];
+    
+    [MPKitFirebaseGA4Analytics setCustomNameStandardization:^(NSString* name) {
+        return @"test";
+    }];
+    for (NSString *tests in customTest) {
+        XCTAssertEqualObjects([exampleKit standardizeNameOrKey:tests forEvent:YES], @"test");
+    }
+    
+    for (NSString *tests in customTest) {
+        XCTAssertEqualObjects([exampleKit standardizeNameOrKey:tests forEvent:NO], @"test");
     }
 }
 
