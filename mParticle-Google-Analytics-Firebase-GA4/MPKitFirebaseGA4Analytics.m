@@ -60,11 +60,11 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 10;
     [MParticle registerExtension:kitRegister];
 }
 
-+ (void)setCustomNameStandardization:(NSString*_Nonnull(^_Nullable)(NSString* _Nonnull name))standardization {
++ (void)setCustomNameStandardization:(NSString * _Nonnull (^_Nullable)(NSString * _Nonnull name))standardization {
     customNameStandardization = standardization;
 }
 
-+ (NSString*_Nonnull(^_Nullable)(NSString* _Nonnull name))customNameStandardization {
++ (NSString * _Nonnull (^_Nullable)(NSString * _Nonnull name))customNameStandardization {
     return customNameStandardization;
 }
 

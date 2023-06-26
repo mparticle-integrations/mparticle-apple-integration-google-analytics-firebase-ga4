@@ -14,8 +14,8 @@
 @property (nonatomic, unsafe_unretained, readonly) BOOL started;
 @property (nonatomic, strong, nullable) MPKitAPI *kitApi;
 
-+ (void)setCustomNameStandardization:(NSString*_Nonnull(^_Nullable)(NSString* _Nonnull name))standardization;
-+ (NSString*_Nonnull(^_Nullable)(NSString* _Nonnull name))customNameStandardization;
++ (void)setCustomNameStandardization:(NSString * _Nonnull (^_Nullable)(NSString * _Nonnull name))standardization;
++ (NSString * _Nonnull (^_Nullable)(NSString * _Nonnull name))customNameStandardization;
 
 @end
 
