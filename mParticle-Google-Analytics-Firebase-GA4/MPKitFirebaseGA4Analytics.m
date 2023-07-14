@@ -11,7 +11,7 @@
     #endif
 #endif
 
-__weak static NSString* (^customNameStandardization)(NSString* name) = nil;
+static NSString* (^customNameStandardization)(NSString* name) = nil;
 
 @interface MPKitFirebaseGA4Analytics () <MPKitProtocol> {
     BOOL forwardRequestsServerSide;
