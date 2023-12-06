@@ -1,10 +1,10 @@
 #import <Foundation/Foundation.h>
-#if defined(__has_include) && __has_include(<mParticle_Apple_SDK/mParticle.h>)
-    #import <mParticle_Apple_SDK/mParticle.h>
-#elif defined(__has_include) && __has_include(<mParticle_Apple_SDK_NoLocation/mParticle.h>)
-    #import <mParticle_Apple_SDK_NoLocation/mParticle.h>
+#if defined(__has_include) && __has_include(<mParticle_Apple_SDK/mParticle-Apple-SDK-umbrella.h>)
+    #import <mParticle_Apple_SDK/mParticle-Apple-SDK-umbrella.h>
+#elif defined(__has_include) && __has_include(<mParticle_Apple_SDK_NoLocation/mParticle-Apple-SDK-umbrella.h>)
+    #import <mParticle_Apple_SDK_NoLocation/mParticle-Apple-SDK-umbrella.h>
 #else
-    #import "mParticle.h"
+    #import "mParticle-Apple-SDK-umbrella.h"
 #endif
 
 @interface MPKitFirebaseGA4Analytics : NSObject <MPKitProtocol>
