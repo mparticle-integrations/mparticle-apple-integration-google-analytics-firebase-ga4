@@ -42,6 +42,7 @@ static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 static NSString *const instanceIdIntegrationKey = @"app_instance_id";
 static NSString *const invalidFirebaseKey = @"invalid_ga4_key";
 
+// Following limits are based off Google Analytics 360 limits, docs here "https://support.google.com/analytics/answer/11202874?sjid=14644072134282618832-NA#limits"
 const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME = 40;
 const NSInteger FIR_MAX_CHARACTERS_IDENTITY_NAME = 24;
 const NSInteger FIR_MAX_CHARACTERS_EVENT_ATTR_VALUE = 500;
