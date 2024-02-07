@@ -109,7 +109,7 @@ jobs:
         if: ${{ github.event.inputs.dryRun == 'false'}}
         run: |
           sudo gem install xcodeproj
-          pod trunk push --allow-warnings
+          pod trunk push --allow-warnings --use-modular-headers
 
   sync-repository:
     name: Finalize release
