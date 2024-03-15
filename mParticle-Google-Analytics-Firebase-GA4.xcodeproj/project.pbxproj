@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2780D0912792152200942CC7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2780D0902792152200942CC7 /* GoogleService-Info.plist */; };
 		D316BD4E217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = D316BD4C217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D316BD4F217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = D316BD4D217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m */; };
+		D32861ED2BA487FD0075AFF0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D32861EC2BA487FD0075AFF0 /* PrivacyInfo.xcprivacy */; };
 		D39C3DE528C78D5B00432A0C /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39C3DE428C78D5B00432A0C /* dummy.swift */; };
 		D3C2105729FC1E3600DBB6D8 /* FirebaseAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3C2104C29FC1E3400DBB6D8 /* FirebaseAnalytics.xcframework */; };
 		D3C2105829FC1E3600DBB6D8 /* FirebaseAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3C2104C29FC1E3400DBB6D8 /* FirebaseAnalytics.xcframework */; };
@@ -66,6 +67,7 @@
 		D316BD36217F670600688E56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D316BD4C217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPKitFirebaseGA4Analytics.h; sourceTree = "<group>"; };
 		D316BD4D217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPKitFirebaseGA4Analytics.m; sourceTree = "<group>"; };
+		D32861EC2BA487FD0075AFF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D39C3DE428C78D5B00432A0C /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		D3C2104C29FC1E3400DBB6D8 /* FirebaseAnalytics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FirebaseAnalytics.xcframework; path = Carthage/Build/FirebaseAnalytics.xcframework; sourceTree = "<group>"; };
 		D3C2104D29FC1E3400DBB6D8 /* FirebaseCoreInternal.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FirebaseCoreInternal.xcframework; path = Carthage/Build/FirebaseCoreInternal.xcframework; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				D316BD36217F670600688E56 /* Info.plist */,
+				D32861EC2BA487FD0075AFF0 /* PrivacyInfo.xcprivacy */,
 				D316BD4C217F67BC00688E56 /* MPKitFirebaseGA4Analytics.h */,
 				D316BD4D217F67BC00688E56 /* MPKitFirebaseGA4Analytics.m */,
 				D39C3DE428C78D5B00432A0C /* dummy.swift */,
@@ -274,6 +277,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D32861ED2BA487FD0075AFF0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
