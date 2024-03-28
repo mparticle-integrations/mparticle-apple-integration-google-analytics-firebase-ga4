@@ -5,9 +5,11 @@
     #if __has_include(<FirebaseCore/FirebaseCore.h>)
         #import <FirebaseCore/FirebaseCore.h>
         #import <FirebaseAnalytics/FIRAnalytics.h>
+        #import <FirebaseAnalytics/FIRAnalytics+Consent.h>
     #else
         #import "FirebaseCore/FirebaseCore.h"
         #import "FirebaseAnalytics/FIRAnalytics.h"
+        #import "FirebaseAnalytics/FIRAnalytics+Consent.h"
     #endif
 #endif
 
@@ -41,6 +43,15 @@ static NSString *const firebaseAllowedCharacters = @"_abcdefghijklmnopqrstuvwxyz
 static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static NSString *const instanceIdIntegrationKey = @"app_instance_id";
 static NSString *const invalidFirebaseKey = @"invalid_ga4_key";
+
+static NSString *const kMPFIRGA4AdStorageKey = @"ad_storage";
+static NSString *const kMPFIRGA4AdUserDataKey = @"ad_user_data";
+static NSString *const kMPFIRGA4AdPersonalizationKey = @"ad_personalization";
+static NSString *const kMPFIRGA4AnalyticsStorageKey = @"analytics_storage";
+static NSString *const kMPFIRGA4DefaultAdStorageKey = @"defaultAdStorageConsentSDK";
+static NSString *const kMPFIRGA4DefaultAdUserDataKey = @"defaultAdUserDataConsentSDK";
+static NSString *const kMPFIRGA4DefaultAdPersonalizationKey = @"defaultAdPersonalizationConsentSDK";
+static NSString *const kMPFIRGA4DefaultAnalyticsStorageKey = @"defaultAnalyticsStorageConsentSDK";
 
 // Following limits are based off Google Analytics 360 limits, docs here "https://support.google.com/analytics/answer/11202874?sjid=14644072134282618832-NA#limits"
 const NSInteger FIR_MAX_CHARACTERS_EVENT_NAME = 40;
@@ -86,6 +97,8 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         }
         
         [self updateInstanceIDIntegration];
+        
+        [self updateConsent];
         
         _started = YES;
         
@@ -356,6 +369,54 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     for (NSString *attributeKey in userAttributesKeys) {
         [FIRAnalytics setUserPropertyString:standardizedUserAttributes[attributeKey] forName:attributeKey];
     }
+}
+
+- (MPKitExecStatus *)setConsentState:(nullable MPConsentState *)state {
+    [self updateConsent];
+    
+    return [self execStatus:MPKitReturnCodeSuccess];
+}
+
+- (void)updateConsent {
+    // If Defaults are not set do not send FIRAnalytics Consent
+    if (!self.configuration[kMPFIRGA4DefaultAdStorageKey] ) {
+        return;
+    }
+    
+    // Default Consent States
+    FIRConsentStatus adStorageStatus = [self.configuration[kMPFIRGA4DefaultAdStorageKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    FIRConsentStatus adUserDataStatus = [self.configuration[kMPFIRGA4DefaultAdUserDataKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    FIRConsentStatus analyticsStorageStatus = [self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    FIRConsentStatus adPersonalizationStatus = [self.configuration[kMPFIRGA4DefaultAdPersonalizationKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    
+    MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
+    NSDictionary<NSString *, MPGDPRConsent *> *userConsentMap = currentUser.consentState.gdprConsentState;
+    
+    // Update from mParticle Consent
+    if (self.configuration[kMPFIRGA4AdStorageKey] && userConsentMap[self.configuration[kMPFIRGA4AdStorageKey]]) {
+        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AdStorageKey]];
+        adStorageStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
+    if (self.configuration[kMPFIRGA4AdUserDataKey] && userConsentMap[self.configuration[kMPFIRGA4AdUserDataKey]]) {
+        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AdUserDataKey]];
+        adUserDataStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
+    if (self.configuration[kMPFIRGA4AnalyticsStorageKey] && userConsentMap[self.configuration[kMPFIRGA4AnalyticsStorageKey]]) {
+        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AnalyticsStorageKey]];
+        analyticsStorageStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
+    if (self.configuration[kMPFIRGA4AdPersonalizationKey] && userConsentMap[self.configuration[kMPFIRGA4AdPersonalizationKey]]) {
+        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AdPersonalizationKey]];
+        adPersonalizationStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
+    
+    // Update Consent State with FIRAnalytics
+    [FIRAnalytics setConsent:@{
+      FIRConsentTypeAnalyticsStorage : analyticsStorageStatus,
+      FIRConsentTypeAdStorage : adStorageStatus,
+      FIRConsentTypeAdUserData : adUserDataStatus,
+      FIRConsentTypeAdPersonalization : adPersonalizationStatus,
+    }];
 }
 
 - (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters {
