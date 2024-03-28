@@ -416,7 +416,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
     NSDictionary<NSString *, MPGDPRConsent *> *userConsentMap = currentUser.consentState.gdprConsentState;
     
-    // Update from mParticle Consent
+    // Update from mParticle consent
     if (self.configuration[kMPFIRGA4AdStorageKey] && userConsentMap[self.configuration[kMPFIRGA4AdStorageKey]]) {
         MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AdStorageKey]];
         adStorageStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
@@ -434,7 +434,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         adPersonalizationStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
     }
     
-    // Construct a dicitonary of consents
+    // Construct a dictionary of consents
     NSMutableDictionary *uploadDict = [[NSMutableDictionary alloc] init];
     if (adStorageStatus) {
         uploadDict[FIRConsentTypeAdStorage] = adStorageStatus;
@@ -449,7 +449,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         uploadDict[FIRConsentTypeAdPersonalization] = adPersonalizationStatus;
     }
     
-    // Update Consent State with FIRAnalytics
+    // Update consent state with FIRAnalytics
     [FIRAnalytics setConsent:uploadDict];
 }
 
