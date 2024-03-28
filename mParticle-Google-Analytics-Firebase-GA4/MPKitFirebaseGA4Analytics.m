@@ -378,16 +378,40 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 }
 
 - (void)updateConsent {
-    // If Defaults are not set do not send FIRAnalytics Consent
-    if (!self.configuration[kMPFIRGA4DefaultAdStorageKey] ) {
-        return;
-    }
+    FIRConsentStatus adStorageStatus;
+    FIRConsentStatus adUserDataStatus;
+    FIRConsentStatus analyticsStorageStatus;
+    FIRConsentStatus adPersonalizationStatus;
     
     // Default Consent States
-    FIRConsentStatus adStorageStatus = [self.configuration[kMPFIRGA4DefaultAdStorageKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
-    FIRConsentStatus adUserDataStatus = [self.configuration[kMPFIRGA4DefaultAdUserDataKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
-    FIRConsentStatus analyticsStorageStatus = [self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
-    FIRConsentStatus adPersonalizationStatus = [self.configuration[kMPFIRGA4DefaultAdPersonalizationKey] isEqual: @"Granted"] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    if (self.configuration[kMPFIRGA4DefaultAdStorageKey]) {
+        if ([self.configuration[kMPFIRGA4DefaultAdStorageKey] isEqual: @"Granted"]) {
+            adStorageStatus = FIRConsentStatusGranted;
+        } else if ([self.configuration[kMPFIRGA4DefaultAdStorageKey] isEqual: @"Denied"]) {
+            adStorageStatus = FIRConsentStatusDenied;
+        }
+    }
+    if (self.configuration[kMPFIRGA4DefaultAdUserDataKey]) {
+        if ([self.configuration[kMPFIRGA4DefaultAdUserDataKey] isEqual: @"Granted"]) {
+            adUserDataStatus = FIRConsentStatusGranted;
+        } else if ([self.configuration[kMPFIRGA4DefaultAdUserDataKey] isEqual: @"Denied"]) {
+            adUserDataStatus = FIRConsentStatusDenied;
+        }
+    }
+    if (self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey]) {
+        if ([self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey] isEqual: @"Granted"]) {
+            analyticsStorageStatus = FIRConsentStatusGranted;
+        } else if ([self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey] isEqual: @"Denied"]) {
+            analyticsStorageStatus = FIRConsentStatusDenied;
+        }
+    }
+    if (self.configuration[kMPFIRGA4DefaultAdPersonalizationKey]) {
+        if ([self.configuration[kMPFIRGA4DefaultAdPersonalizationKey] isEqual: @"Granted"]) {
+            adPersonalizationStatus = FIRConsentStatusGranted;
+        } else if ([self.configuration[kMPFIRGA4DefaultAdPersonalizationKey] isEqual: @"Denied"]) {
+            adPersonalizationStatus = FIRConsentStatusDenied;
+        }
+    }
     
     MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
     NSDictionary<NSString *, MPGDPRConsent *> *userConsentMap = currentUser.consentState.gdprConsentState;
@@ -410,13 +434,23 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         adPersonalizationStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
     }
     
+    // Construct a dicitonary of consents
+    NSMutableDictionary *uploadDict = [[NSMutableDictionary alloc] init];
+    if (adStorageStatus) {
+        uploadDict[FIRConsentTypeAdStorage] = adStorageStatus;
+    }
+    if (adUserDataStatus) {
+        uploadDict[FIRConsentTypeAdUserData] = adUserDataStatus;
+    }
+    if (analyticsStorageStatus) {
+        uploadDict[FIRConsentTypeAnalyticsStorage] = analyticsStorageStatus;
+    }
+    if (adPersonalizationStatus) {
+        uploadDict[FIRConsentTypeAdPersonalization] = adPersonalizationStatus;
+    }
+    
     // Update Consent State with FIRAnalytics
-    [FIRAnalytics setConsent:@{
-      FIRConsentTypeAnalyticsStorage : analyticsStorageStatus,
-      FIRConsentTypeAdStorage : adStorageStatus,
-      FIRConsentTypeAdUserData : adUserDataStatus,
-      FIRConsentTypeAdPersonalization : adPersonalizationStatus,
-    }];
+    [FIRAnalytics setConsent:uploadDict];
 }
 
 - (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters {
