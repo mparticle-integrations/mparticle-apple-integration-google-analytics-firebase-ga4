@@ -143,10 +143,10 @@
         XCTAssertEqualObjects([exampleKit standardizeNameOrKey:badStart forEvent:YES], @"event_name");
     }
     
-    NSString *tooLong = @"abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890";
+    NSString *tooLong = @"abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890";
     XCTAssertEqual(40, [exampleKit standardizeNameOrKey:tooLong forEvent:YES].length);
     XCTAssertEqual(24, [exampleKit standardizeNameOrKey:tooLong forEvent:NO].length);
-    XCTAssertEqual(100, [exampleKit standardizeValue:tooLong forEvent:YES].length);
+    XCTAssertEqual(500, [exampleKit standardizeValue:tooLong forEvent:YES].length);
     XCTAssertEqual(36, [exampleKit standardizeValue:tooLong forEvent:NO].length);
     
     NSArray *emptyStrings = @[@"!@#$%^&*()_+=[]{}|'\"?><:;",
@@ -240,41 +240,24 @@
     XCTAssertEqual([parameters count], 25);
     XCTAssertEqualObjects(parameters, testFinalAttributes);
     
-    NSDictionary *testExcessiveAttributes = @{ @"test1": @"parameter",
-                                               @"test2": @"parameter",
-                                               @"test3": @"parameter",
-                                               @"test4": @"parameter",
-                                               @"test5": @"parameter",
-                                               @"test6": @"parameter",
-                                               @"test7": @"parameter",
-                                               @"test8": @"parameter",
-                                               @"test9": @"parameter",
-                                               @"test10": @"parameter",
-                                               @"test11": @"parameter",
-                                               @"test12": @"parameter",
-                                               @"test13": @"parameter",
-                                               @"test14": @"parameter",
-                                               @"test15": @"parameter",
-                                               @"test16": @"parameter",
-                                               @"test17": @"parameter",
-                                               @"test18": @"parameter",
-                                               @"test19": @"parameter",
-                                               @"test20": @"parameter",
-                                               @"test21": @"parameter",
-                                               @"test22": @"parameter",
-                                               @"test23": @"parameter",
-                                               @"test24": @"parameter",
-                                               @"z1": @"parameter",
-                                               @"z2": @"parameter",
-                                               @"z3": @"parameter",
-                                               @"z4": @"parameter",
-                                               @"z5": @"parameter"
-          };
+    NSMutableDictionary *testExcessiveAttributes = [[NSMutableDictionary alloc] initWithCapacity:125];
+    for (int i = 0; i < 125; i++) {
+        NSString *key = [NSString stringWithFormat:@"test%03d", i];
+        testExcessiveAttributes[key] = @"parameter";
+    }
+    
+    NSMutableDictionary *testExcessiveFinalAttributes = [[NSMutableDictionary alloc] initWithCapacity:125];
+    for (int i = 0; i <99 ; i++) {
+        NSString *key = [NSString stringWithFormat:@"test%03d", i];
+        testExcessiveFinalAttributes[key] = @"parameter";
+    }
+    testExcessiveFinalAttributes[@"currency"] = @"USD";
+    
     event.customAttributes = testExcessiveAttributes;
     
     parameters = [exampleKit getParameterForCommerceEvent:event];
-    XCTAssertEqual([parameters count], 25);
-    XCTAssertEqualObjects(parameters, testFinalAttributes);
+    XCTAssertEqual([parameters count], 100);
+    XCTAssertEqualObjects(parameters, testExcessiveFinalAttributes);
 
 
     MPKitExecStatus *execStatus = [exampleKit logBaseEvent:event];
