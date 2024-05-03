@@ -16,14 +16,16 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = "11.0"
     s.ios.source_files      = 'mParticle-Google-Analytics-Firebase-GA4/*.{h,m,mm}'
-    s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.0'
+    s.ios.resource_bundles  = { 'mParticle-Google-Analytics-Firebase-GA4-Privacy' => ['mParticle-Google-Analytics-Firebase-GA4/PrivacyInfo.xcprivacy'] }
+    s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.22'
     s.ios.frameworks = 'CoreTelephony', 'SystemConfiguration'
     s.libraries = 'z'
     s.ios.dependency 'Firebase/Core', '~> 10.23'
 
     s.tvos.deployment_target = "12.0"
     s.tvos.source_files      = 'mParticle-Google-Analytics-Firebase-GA4/*.{h,m,mm}'
-    s.tvos.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.0'
+    s.ios.resource_bundles  = { 'mParticle-Google-Analytics-Firebase-GA4-Privacy' => ['mParticle-Google-Analytics-Firebase-GA4/PrivacyInfo.xcprivacy'] }
+    s.tvos.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.22'
     s.tvos.frameworks = 'SystemConfiguration'
     s.libraries = 'z'
     s.tvos.dependency 'Firebase/Core', '~> 10.23'
