@@ -529,6 +529,9 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
             if (product.category) {
                 [productParameters setObject:product.category forKey:kFIRParameterItemCategory];
             }
+            if (product.brand) {
+                [productParameters setObject:product.brand forKey:kFIRParameterItemBrand];
+            }
             if (product.price) {
                 [productParameters setObject:product.price forKey:kFIRParameterPrice];
             }
@@ -564,6 +567,9 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         }
         if (product.category) {
             [productParameters setObject:product.category forKey:kFIRParameterItemCategory];
+        }
+        if (product.brand) {
+            [productParameters setObject:product.brand forKey:kFIRParameterItemBrand];
         }
         if (product.price) {
             [productParameters setObject:product.price forKey:kFIRParameterPrice];
