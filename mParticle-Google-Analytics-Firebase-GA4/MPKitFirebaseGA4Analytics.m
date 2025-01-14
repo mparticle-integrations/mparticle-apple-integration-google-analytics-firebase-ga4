@@ -175,8 +175,8 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         return [self execStatus:MPKitReturnCodeFail];
     }
 
-    NSString *standardizedFirebaseEventName = [self standardizeNameOrKey:event.name forEvent:YES];
-    [FIRAnalytics logEventWithName:kFIREventScreenView parameters:@{kFIRParameterScreenName: standardizedFirebaseEventName}];
+    NSMutableDictionary *screenParameters = [self getParametersForScreen:event];
+    [FIRAnalytics logEventWithName:kFIREventScreenView parameters:screenParameters];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }
@@ -260,7 +260,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     return finalValue;
 }
 
-- (NSDictionary<NSString *, id> *)standardizeValues:(NSDictionary<NSString *, id> *)values forEvent:(BOOL)forEvent {
+- (NSMutableDictionary<NSString *, id> *)standardizeValues:(NSDictionary<NSString *, id> *)values forEvent:(BOOL)forEvent {
     NSMutableDictionary<NSString *, id>  *standardizedValue = [[NSMutableDictionary alloc] init];
     
     for (NSString *key in values.allKeys) {
@@ -270,6 +270,13 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     
     [self limitDictionary:standardizedValue maxCount:FIR_MAX_EVENT_PARAMETERS_PROPERTIES];
     return standardizedValue;
+}
+
+- (NSMutableDictionary<NSString *, id> *)getParametersForScreen:(MPEvent *)screenEvent {
+    NSMutableDictionary *standardizedScreenParameters = [self standardizeValues:screenEvent.customAttributes forEvent:YES];
+    NSString *standardizedFirebaseEventName = [self standardizeNameOrKey:screenEvent.name forEvent:YES];
+    standardizedScreenParameters[kFIRParameterScreenName] = standardizedFirebaseEventName;
+    return standardizedScreenParameters;
 }
 
 - (MPKitExecStatus *)onLoginComplete:(FilteredMParticleUser *)user request:(FilteredMPIdentityApiRequest *)request {
