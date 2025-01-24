@@ -506,54 +506,9 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     return parameters;
 }
 
-- (NSDictionary<NSString *, id> *)getParameterForImpression:(NSString *)impressionKey  commerceEvent:(MPCommerceEvent *)commerceEvent products:(NSSet<MPProduct *> *)products {
-    NSMutableDictionary<NSString *, id> *parameters = [[self standardizeValues:commerceEvent.customAttributes forEvent:YES] mutableCopy];
-    
-    [parameters setObject:impressionKey forKey:kFIRParameterItemListID];
-    [parameters setObject:impressionKey forKey:kFIRParameterItemListName];
-    
-    if (products.count > 0) {
-        NSMutableArray *itemArray = [[NSMutableArray alloc] init];
-        for (MPProduct *product in products) {
-            NSMutableDictionary<NSString *, id> *productParameters = [[NSMutableDictionary alloc] init];
-            
-            if (product.quantity) {
-                [productParameters setObject:product.quantity forKey:kFIRParameterQuantity];
-            }
-            if (product.sku) {
-                [productParameters setObject:product.sku forKey:kFIRParameterItemID];
-            }
-            if (product.name) {
-                [productParameters setObject:product.name forKey:kFIRParameterItemName];
-            }
-            if (product.category) {
-                [productParameters setObject:product.category forKey:kFIRParameterItemCategory];
-            }
-            if (product.brand) {
-                [productParameters setObject:product.brand forKey:kFIRParameterItemBrand];
-            }
-            if (product.price) {
-                [productParameters setObject:product.price forKey:kFIRParameterPrice];
-            }
-            
-            [self limitDictionary:productParameters maxCount:FIR_MAX_ITEM_PARAMETERS];
-            [itemArray addObject:productParameters];
-        }
-        
-        if (itemArray.count > 0) {
-            [parameters setObject:itemArray forKey:kFIRParameterItems];
-        }
-    }
-    
-    [self limitDictionary:parameters maxCount:FIR_MAX_EVENT_PARAMETERS_PROPERTIES];
-    return parameters;
-}
-
-- (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent {
-    NSMutableDictionary<NSString *, id> *parameters = [[self standardizeValues:commerceEvent.customAttributes forEvent:YES] mutableCopy];
-    
+- (NSMutableArray *)getParametersForProducts:(id)products {
     NSMutableArray *itemArray = [[NSMutableArray alloc] init];
-    for (MPProduct *product in commerceEvent.products) {
+    for (MPProduct *product in products) {
         NSMutableDictionary<NSString *, id> *productParameters = [[NSMutableDictionary alloc] init];
         
         if (product.quantity) {
@@ -574,10 +529,41 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         if (product.price) {
             [productParameters setObject:product.price forKey:kFIRParameterPrice];
         }
+        if (product.userDefinedAttributes) {
+            for (NSString *productCustomAttribute in product.userDefinedAttributes) {
+                [productParameters setObject:product.userDefinedAttributes[productCustomAttribute] forKey:productCustomAttribute];
+            }
+        }
         
         [self limitDictionary:productParameters maxCount:FIR_MAX_ITEM_PARAMETERS];
         [itemArray addObject:productParameters];
     }
+    
+    return itemArray;
+}
+
+- (NSDictionary<NSString *, id> *)getParameterForImpression:(NSString *)impressionKey  commerceEvent:(MPCommerceEvent *)commerceEvent products:(NSSet<MPProduct *> *)products {
+    NSMutableDictionary<NSString *, id> *parameters = [[self standardizeValues:commerceEvent.customAttributes forEvent:YES] mutableCopy];
+    
+    [parameters setObject:impressionKey forKey:kFIRParameterItemListID];
+    [parameters setObject:impressionKey forKey:kFIRParameterItemListName];
+    
+    if (products.count > 0) {
+        NSMutableArray *itemArray = [self getParametersForProducts:products];
+        
+        if (itemArray.count > 0) {
+            [parameters setObject:itemArray forKey:kFIRParameterItems];
+        }
+    }
+    
+    [self limitDictionary:parameters maxCount:FIR_MAX_EVENT_PARAMETERS_PROPERTIES];
+    return parameters;
+}
+
+- (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent {
+    NSMutableDictionary<NSString *, id> *parameters = [[self standardizeValues:commerceEvent.customAttributes forEvent:YES] mutableCopy];
+    
+    NSMutableArray *itemArray = [self getParametersForProducts:commerceEvent.products];
     
     if (itemArray.count > 0) {
         [parameters setObject:itemArray forKey:kFIRParameterItems];
