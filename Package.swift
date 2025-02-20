@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "mParticle-Google-Analytics-Firebase-GA4",
-    platforms: [ .iOS(.v11), .tvOS(.v12) ],
+    platforms: [ .iOS(.v13), .tvOS(.v13) ],
     products: [
         .library(
             name: "mParticle-Google-Analytics-Firebase-GA4",
@@ -20,7 +20,7 @@ let package = Package(
                .upToNextMajor(from: "8.22.0")),
       .package(name: "Firebase",
                url: "https://github.com/firebase/firebase-ios-sdk.git",
-               .upToNextMajor(from: "10.23.0")),
+               .upToNextMajor(from: "11.8.0")),
     ],
     targets: [
         .target(
