@@ -12,7 +12,7 @@
 - (NSString *)standardizeValue:(id)value forEvent:(BOOL)forEvent;
 - (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters;
 - (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent;
-- (NSMutableArray *)getParametersForProducts:(id)products;
+- (NSMutableDictionary<NSString *, id> *)getParametersForScreen:(MPEvent *)screenEvent;
 @end
 
 @interface mParticle_Firebase_AnalyticsTests : XCTestCase
@@ -332,6 +332,30 @@
     [event addCustomFlags:@[kFIREventAddShippingInfo, kFIREventAddPaymentInfo] withKey:kMPFIRGA4CommerceEventType];
     eventName = [exampleKit getEventNameForCommerceEvent:event parameters:parameters];
     XCTAssertEqualObjects(kFIREventAddShippingInfo, eventName);
+}
+
+- (void)testScreenNameAttributes {
+    MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
+    [exampleKit didFinishLaunchingWithConfiguration:@{}];
+    
+    MPEvent *event = [[MPEvent alloc] initWithName:@"testScreenName" type:MPEventTypeOther];
+    event.customAttributes = @{@"testScreenAttribute":@"value"};
+    MPKitExecStatus *execStatus = [exampleKit logScreen:event];
+    
+    XCTAssertTrue(execStatus.success);
+    
+    NSMutableDictionary<NSString *, id> *screenParameters = [exampleKit getParametersForScreen:event];
+    
+    // Even though we only pass one custom attribute, the parameters should include the standardized screen name, so the total expected count is two
+    XCTAssertEqual(screenParameters.count, 2);
+    
+    NSString *standardizedScreenName = [exampleKit standardizeNameOrKey:event.name forEvent:YES];
+    NSString *screenNameParameter = screenParameters[kFIRParameterScreenName];
+
+    // Test screen name parameter is not Nil and exists in the screen parameters dictionary
+    XCTAssertNotNil(screenNameParameter);
+    // Test screen name parameter value is correct
+    XCTAssertEqualObjects(screenNameParameter, standardizedScreenName);
 }
 
 @end
