@@ -536,6 +536,10 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         if (product.price) {
             [productParameters setObject:product.price forKey:kFIRParameterPrice];
         }
+        if (product.position) {
+            id indexParameter = @(product.position);
+            [productParameters setObject:indexParameter forKey:kFIRParameterIndex];
+        }
         if (product.userDefinedAttributes) {
             for (NSString *productCustomAttribute in product.userDefinedAttributes) {
                 [productParameters setObject:product.userDefinedAttributes[productCustomAttribute] forKey:productCustomAttribute];

@@ -13,6 +13,7 @@
 - (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters;
 - (NSDictionary<NSString *, id> *)getParameterForCommerceEvent:(MPCommerceEvent *)commerceEvent;
 - (NSMutableDictionary<NSString *, id> *)getParametersForScreen:(MPEvent *)screenEvent;
+- (NSMutableArray *)getParametersForProducts:(id)products;
 @end
 
 @interface mParticle_Firebase_AnalyticsTests : XCTestCase
@@ -298,6 +299,7 @@
     NSMutableDictionary<NSString *, id> *testProductCustomAttributes = [[@{@"productCustomAttribute": @"potato", @"store": @"Target"} mutableCopy] mutableCopy];
     product.brand = @"LV";
     product.category = @"vegetable";
+    product.position = 4;
     product.userDefinedAttributes = testProductCustomAttributes;
     
     MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithImpressionName:@"suggested products list" product:product];
@@ -306,8 +308,8 @@
     NSArray *itemsArray = [exampleKit getParametersForProducts:impressionProducts];
     id item = itemsArray[0];
     
-    // The item inside itemsArray should include 8 parameters in total including the 2 product custom attributes
-    XCTAssertEqual([item count], 8);
+    // The item inside itemsArray should include 9 parameters in total including the 2 product custom attributes
+    XCTAssertEqual([item count], 9);
 }
 
 - (void)testCommerceEventCheckoutOptions {
