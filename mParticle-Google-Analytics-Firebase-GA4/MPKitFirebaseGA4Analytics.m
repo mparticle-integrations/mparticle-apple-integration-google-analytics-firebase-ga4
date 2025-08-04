@@ -536,7 +536,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         if (product.price) {
             [productParameters setObject:product.price forKey:kFIRParameterPrice];
         }
-        if (product.position != nil && [product.position isKindOfClass:[NSNumber class]]) {
+        if (product.position >= 0) {
             id indexParameter = @(product.position);
             [productParameters setObject:indexParameter forKey:kFIRParameterIndex];
         }
