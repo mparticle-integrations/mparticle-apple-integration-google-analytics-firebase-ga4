@@ -312,6 +312,27 @@
     XCTAssertEqual([item count], 9);
 }
 
+- (void)testProductPositionEqualZero {
+    MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
+    [exampleKit didFinishLaunchingWithConfiguration:@{}];
+    
+    MPProduct *product = [[MPProduct alloc] initWithName:@"expensivePotato" sku:@"SKU123" quantity:@1 price:@40.0];
+    NSMutableDictionary<NSString *, id> *testProductCustomAttributes = [[@{@"productCustomAttribute": @"potato", @"store": @"Target"} mutableCopy] mutableCopy];
+    product.brand = @"LV";
+    product.category = @"vegetable";
+    product.position = 0;
+    product.userDefinedAttributes = testProductCustomAttributes;
+    
+    MPCommerceEvent *event = [[MPCommerceEvent alloc] initWithImpressionName:@"suggested products list" product:product];
+    NSSet<MPProduct *> *impressionProducts = event.impressions[@"suggested products list"];
+    
+    NSArray *itemsArray = [exampleKit getParametersForProducts:impressionProducts];
+    id item = itemsArray[0];
+    
+    // The item inside itemsArray should include 9 parameters in total including the 2 product custom attributes
+    XCTAssertEqual([item count], 9);
+}
+
 - (void)testCommerceEventCheckoutOptions {
     MPKitFirebaseGA4Analytics *exampleKit = [[MPKitFirebaseGA4Analytics alloc] init];
     [exampleKit didFinishLaunchingWithConfiguration:@{}];
