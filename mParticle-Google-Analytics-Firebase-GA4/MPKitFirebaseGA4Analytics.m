@@ -536,7 +536,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         if (product.price) {
             [productParameters setObject:product.price forKey:kFIRParameterPrice];
         }
-        if (product.position) {
+        if (product.position >= 0) {
             id indexParameter = @(product.position);
             [productParameters setObject:indexParameter forKey:kFIRParameterIndex];
         }
