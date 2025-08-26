@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
 
     s.tvos.deployment_target = "15.0"
     s.tvos.source_files      = 'mParticle-Google-Analytics-Firebase-GA4/*.{h,m,mm}'
-    s.ios.resource_bundles  = { 'mParticle-Google-Analytics-Firebase-GA4-Privacy' => ['mParticle-Google-Analytics-Firebase-GA4/PrivacyInfo.xcprivacy'] }
+    s.tvos.resource_bundles  = { 'mParticle-Google-Analytics-Firebase-GA4-Privacy' => ['mParticle-Google-Analytics-Firebase-GA4/PrivacyInfo.xcprivacy'] }
     s.tvos.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.22'
     s.tvos.frameworks = 'SystemConfiguration'
     s.libraries = 'z'
