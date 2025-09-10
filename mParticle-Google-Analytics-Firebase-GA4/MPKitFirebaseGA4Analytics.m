@@ -44,10 +44,13 @@ static NSString *const aToZCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 static NSString *const instanceIdIntegrationKey = @"app_instance_id";
 static NSString *const invalidFirebaseKey = @"invalid_ga4_key";
 
+// Consent Mapping Keys
 static NSString *const kMPFIRGA4AdStorageKey = @"ad_storage";
 static NSString *const kMPFIRGA4AdUserDataKey = @"ad_user_data";
 static NSString *const kMPFIRGA4AdPersonalizationKey = @"ad_personalization";
 static NSString *const kMPFIRGA4AnalyticsStorageKey = @"analytics_storage";
+
+// Default Consent Keys (from mParticle UI)
 static NSString *const kMPFIRGA4DefaultAdStorageKey = @"defaultAdStorageConsentSDK";
 static NSString *const kMPFIRGA4DefaultAdUserDataKey = @"defaultAdUserDataConsentSDK";
 static NSString *const kMPFIRGA4DefaultAdPersonalizationKey = @"defaultAdPersonalizationConsentSDK";
@@ -87,6 +90,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 #pragma mark MPKitInstanceProtocol methods
 - (MPKitExecStatus *)didFinishLaunchingWithConfiguration:(NSDictionary *)configuration {
     _configuration = configuration;
+    [FIRApp configure];
     
     if ([FIRApp defaultApp] == nil) {
         NSAssert(NO, @"There is no instance of Firebase. Check the docs and review your code.");
@@ -385,76 +389,51 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 }
 
 - (void)updateConsent {
-    FIRConsentStatus adStorageStatus;
-    FIRConsentStatus adUserDataStatus;
-    FIRConsentStatus analyticsStorageStatus;
-    FIRConsentStatus adPersonalizationStatus;
+    NSArray<NSDictionary *> *mappings = [self mappingForKey: @"consentMappingSDK"];
+    NSDictionary<NSString *, NSString *> *mappingsConfig;
+    if (mappings != nil) {
+        mappingsConfig = [self convertToKeyValuePairs: mappings];
+    }
     
-    // Default Consent States
-    if (self.configuration[kMPFIRGA4DefaultAdStorageKey]) {
-        if ([self.configuration[kMPFIRGA4DefaultAdStorageKey] isEqual: @"Granted"]) {
-            adStorageStatus = FIRConsentStatusGranted;
-        } else if ([self.configuration[kMPFIRGA4DefaultAdStorageKey] isEqual: @"Denied"]) {
-            adStorageStatus = FIRConsentStatusDenied;
-        }
-    }
-    if (self.configuration[kMPFIRGA4DefaultAdUserDataKey]) {
-        if ([self.configuration[kMPFIRGA4DefaultAdUserDataKey] isEqual: @"Granted"]) {
-            adUserDataStatus = FIRConsentStatusGranted;
-        } else if ([self.configuration[kMPFIRGA4DefaultAdUserDataKey] isEqual: @"Denied"]) {
-            adUserDataStatus = FIRConsentStatusDenied;
-        }
-    }
-    if (self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey]) {
-        if ([self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey] isEqual: @"Granted"]) {
-            analyticsStorageStatus = FIRConsentStatusGranted;
-        } else if ([self.configuration[kMPFIRGA4DefaultAnalyticsStorageKey] isEqual: @"Denied"]) {
-            analyticsStorageStatus = FIRConsentStatusDenied;
-        }
-    }
-    if (self.configuration[kMPFIRGA4DefaultAdPersonalizationKey]) {
-        if ([self.configuration[kMPFIRGA4DefaultAdPersonalizationKey] isEqual: @"Granted"]) {
-            adPersonalizationStatus = FIRConsentStatusGranted;
-        } else if ([self.configuration[kMPFIRGA4DefaultAdPersonalizationKey] isEqual: @"Denied"]) {
-            adPersonalizationStatus = FIRConsentStatusDenied;
-        }
-    }
     
     MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
-    NSDictionary<NSString *, MPGDPRConsent *> *userConsentMap = currentUser.consentState.gdprConsentState;
+    NSDictionary<NSString *, MPGDPRConsent *> *gdprConsents = currentUser.consentState.gdprConsentState;
+
+    NSNumber *adStorage = [self resolvedConsentForMappingKey:kMPFIRGA4AdStorageKey
+                                                  defaultKey:kMPFIRGA4DefaultAdStorageKey
+                                                gdprConsents:gdprConsents
+                                              mappingsConfig:mappingsConfig];
+
+    NSNumber *adUserData = [self resolvedConsentForMappingKey:kMPFIRGA4AdUserDataKey
+                                                   defaultKey:kMPFIRGA4DefaultAdUserDataKey
+                                                 gdprConsents:gdprConsents
+                                               mappingsConfig:mappingsConfig];
+
+    NSNumber *analyticsStorage = [self resolvedConsentForMappingKey:kMPFIRGA4AnalyticsStorageKey
+                                                         defaultKey:kMPFIRGA4DefaultAnalyticsStorageKey
+                                                       gdprConsents:gdprConsents
+                                                     mappingsConfig:mappingsConfig];
+
+    NSNumber *adPersonalization = [self resolvedConsentForMappingKey:kMPFIRGA4AdPersonalizationKey
+                                                          defaultKey:kMPFIRGA4DefaultAdPersonalizationKey
+                                                        gdprConsents:gdprConsents
+                                                      mappingsConfig:mappingsConfig];
+
+    NSMutableDictionary *uploadDict = [NSMutableDictionary dictionary];
+
+    if (adStorage != nil) {
+        uploadDict[FIRConsentTypeAdStorage] = adStorage.boolValue ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
+    if (adUserData != nil) {
+        uploadDict[FIRConsentTypeAdUserData] = adUserData.boolValue ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
+    if (analyticsStorage != nil) {
+        uploadDict[FIRConsentTypeAnalyticsStorage] = analyticsStorage.boolValue ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
+    if (adPersonalization != nil) {
+        uploadDict[FIRConsentTypeAdPersonalization] = adPersonalization.boolValue ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    }
     
-    // Update from mParticle consent
-    if (self.configuration[kMPFIRGA4AdStorageKey] && userConsentMap[self.configuration[kMPFIRGA4AdStorageKey]]) {
-        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AdStorageKey]];
-        adStorageStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
-    }
-    if (self.configuration[kMPFIRGA4AdUserDataKey] && userConsentMap[self.configuration[kMPFIRGA4AdUserDataKey]]) {
-        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AdUserDataKey]];
-        adUserDataStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
-    }
-    if (self.configuration[kMPFIRGA4AnalyticsStorageKey] && userConsentMap[self.configuration[kMPFIRGA4AnalyticsStorageKey]]) {
-        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AnalyticsStorageKey]];
-        analyticsStorageStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
-    }
-    if (self.configuration[kMPFIRGA4AdPersonalizationKey] && userConsentMap[self.configuration[kMPFIRGA4AdPersonalizationKey]]) {
-        MPGDPRConsent *consent = userConsentMap[self.configuration[kMPFIRGA4AdPersonalizationKey]];
-        adPersonalizationStatus = consent.consented ? FIRConsentStatusGranted : FIRConsentStatusDenied;
-    }
-    
-    // Construct a dictionary of consents
-    NSMutableDictionary *uploadDict = [[NSMutableDictionary alloc] init];
-    if (adStorageStatus) {
-        uploadDict[FIRConsentTypeAdStorage] = adStorageStatus;
-    }
-    if (adUserDataStatus) {
-        uploadDict[FIRConsentTypeAdUserData] = adUserDataStatus;
-    }
-    if (analyticsStorageStatus) {
-        uploadDict[FIRConsentTypeAnalyticsStorage] = analyticsStorageStatus;
-    }
-    if (adPersonalizationStatus) {
-        uploadDict[FIRConsentTypeAdPersonalization] = adPersonalizationStatus;
-    }
     
     // Update consent state with FIRAnalytics
     [FIRAnalytics setConsent:uploadDict];
@@ -686,6 +665,53 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
             [dictionary removeObjectForKey:dictionaryKeys[i]];
         }
     }
+}
+
+#pragma mark - Helpers
+
+- (NSNumber * _Nullable)resolvedConsentForMappingKey:(NSString *)mappingKey
+                                          defaultKey:(NSString *)defaultKey
+                                        gdprConsents:(NSDictionary<NSString *, MPGDPRConsent *> *)gdprConsents
+                                      mappingsConfig:(NSDictionary<NSString *, NSString*> *) mapping {
+
+    // Prefer mParticle Consent if available
+    NSString *purpose = mapping[mappingKey];
+    if (purpose) {
+        MPGDPRConsent *consent = gdprConsents[purpose];
+        if (consent) {
+            return @(consent.consented);
+        }
+    }
+
+    // Fallback to configuration defaults
+    NSString *value = self->_configuration[defaultKey];
+    if ([value isEqualToString:@"Granted"]) {
+        return @(YES);
+    } else if ([value isEqualToString:@"Denied"]) {
+        return @(NO);
+    }
+    return nil;
+}
+
+- (NSArray<NSDictionary *>*)mappingForKey:(NSString*)key {
+    NSString *mappingJson = _configuration[@"consentMappingSDK"];
+    if ([mappingJson isKindOfClass:[NSString class]]) {
+        NSData *jsonData = [mappingJson dataUsingEncoding:NSUTF8StringEncoding];
+        return [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+    }
+    return nil;
+}
+
+- (NSDictionary*)convertToKeyValuePairs: (NSArray<NSDictionary *>*) mappings {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    for (NSDictionary *entry in mappings) {
+        NSString *value = entry[@"value"];
+        NSString *purpose = [entry[@"map"] lowercaseString];
+        if (value && purpose) {
+            dict[value] = purpose;
+        }
+    }
+    return dict;
 }
 
 @end
