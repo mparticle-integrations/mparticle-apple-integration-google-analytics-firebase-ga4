@@ -90,7 +90,6 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 #pragma mark MPKitInstanceProtocol methods
 - (MPKitExecStatus *)didFinishLaunchingWithConfiguration:(NSDictionary *)configuration {
     _configuration = configuration;
-    [FIRApp configure];
     
     if ([FIRApp defaultApp] == nil) {
         NSAssert(NO, @"There is no instance of Firebase. Check the docs and review your code.");
