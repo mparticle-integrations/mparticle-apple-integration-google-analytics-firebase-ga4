@@ -401,22 +401,22 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     NSNumber *adStorage = [self resolvedConsentForMappingKey:kMPFIRGA4AdStorageKey
                                                   defaultKey:kMPFIRGA4DefaultAdStorageKey
                                                 gdprConsents:gdprConsents
-                                              mappingsConfig:mappingsConfig];
+                                              mapping:mappingsConfig];
 
     NSNumber *adUserData = [self resolvedConsentForMappingKey:kMPFIRGA4AdUserDataKey
                                                    defaultKey:kMPFIRGA4DefaultAdUserDataKey
                                                  gdprConsents:gdprConsents
-                                               mappingsConfig:mappingsConfig];
+                                               mapping:mappingsConfig];
 
     NSNumber *analyticsStorage = [self resolvedConsentForMappingKey:kMPFIRGA4AnalyticsStorageKey
                                                          defaultKey:kMPFIRGA4DefaultAnalyticsStorageKey
                                                        gdprConsents:gdprConsents
-                                                     mappingsConfig:mappingsConfig];
+                                                     mapping:mappingsConfig];
 
     NSNumber *adPersonalization = [self resolvedConsentForMappingKey:kMPFIRGA4AdPersonalizationKey
                                                           defaultKey:kMPFIRGA4DefaultAdPersonalizationKey
                                                         gdprConsents:gdprConsents
-                                                      mappingsConfig:mappingsConfig];
+                                                      mapping:mappingsConfig];
 
     NSMutableDictionary *uploadDict = [NSMutableDictionary dictionary];
 
@@ -671,7 +671,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 - (NSNumber * _Nullable)resolvedConsentForMappingKey:(NSString *)mappingKey
                                           defaultKey:(NSString *)defaultKey
                                         gdprConsents:(NSDictionary<NSString *, MPGDPRConsent *> *)gdprConsents
-                                      mappingsConfig:(NSDictionary<NSString *, NSString*> *) mapping {
+                                      mapping:(NSDictionary<NSString *, NSString*> *) mapping {
 
     // Prefer mParticle Consent if available
     NSString *purpose = mapping[mappingKey];
