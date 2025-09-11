@@ -694,11 +694,20 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 
 - (NSArray<NSDictionary *>*)mappingForKey:(NSString*)key {
     NSString *mappingJson = _configuration[@"consentMappingSDK"];
-    if ([mappingJson isKindOfClass:[NSString class]]) {
-        NSData *jsonData = [mappingJson dataUsingEncoding:NSUTF8StringEncoding];
-        return [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+    if (![mappingJson isKindOfClass:[NSString class]]) {
+        return nil;
     }
-    return nil;
+    
+    NSData *jsonData = [mappingJson dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error;
+    NSArray *result = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+    
+    if (error) {
+        NSLog(@"Failed to parse consent mapping JSON: %@", error.localizedDescription);
+        return nil;
+    }
+    
+    return result;
 }
 
 - (NSDictionary*)convertToKeyValuePairs: (NSArray<NSDictionary *>*) mappings {
