@@ -13,6 +13,7 @@ Pod::Spec.new do |s|
     s.source           = { :git => "https://github.com/mparticle-integrations/mparticle-apple-integration-google-analytics-firebase-ga4.git", :tag => "v" +s.version.to_s }
     s.social_media_url = "https://twitter.com/mparticle"
     s.static_framework = true
+    s.swift_versions = ["6.0"]
 
     s.ios.deployment_target = "15.0"
     s.ios.source_files      = 'mParticle-Google-Analytics-Firebase-GA4/*.{h,m,mm}'
