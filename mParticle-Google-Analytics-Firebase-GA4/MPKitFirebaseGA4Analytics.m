@@ -387,36 +387,35 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
-- (void)updateConsent {
-    NSArray<NSDictionary *> *mappings = [self mappingForKey: @"consentMappingSDK"];
+- (NSDictionary<NSString *, NSString *> *)consentDictionaryForCurrentUser {
+    NSArray<NSDictionary *> *mappings = [self mappingForKey:@"consentMappingSDK"];
     NSDictionary<NSString *, NSString *> *mappingsConfig;
     if (mappings != nil) {
-        mappingsConfig = [self convertToKeyValuePairs: mappings];
+        mappingsConfig = [self convertToKeyValuePairs:mappings];
     }
-    
-    
+
     MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
     NSDictionary<NSString *, MPGDPRConsent *> *gdprConsents = currentUser.consentState.gdprConsentState;
 
     NSNumber *adStorage = [self resolvedConsentForMappingKey:kMPFIRGA4AdStorageKey
                                                   defaultKey:kMPFIRGA4DefaultAdStorageKey
                                                 gdprConsents:gdprConsents
-                                              mapping:mappingsConfig];
+                                                     mapping:mappingsConfig];
 
     NSNumber *adUserData = [self resolvedConsentForMappingKey:kMPFIRGA4AdUserDataKey
                                                    defaultKey:kMPFIRGA4DefaultAdUserDataKey
                                                  gdprConsents:gdprConsents
-                                               mapping:mappingsConfig];
+                                                      mapping:mappingsConfig];
 
     NSNumber *analyticsStorage = [self resolvedConsentForMappingKey:kMPFIRGA4AnalyticsStorageKey
                                                          defaultKey:kMPFIRGA4DefaultAnalyticsStorageKey
                                                        gdprConsents:gdprConsents
-                                                     mapping:mappingsConfig];
+                                                            mapping:mappingsConfig];
 
     NSNumber *adPersonalization = [self resolvedConsentForMappingKey:kMPFIRGA4AdPersonalizationKey
                                                           defaultKey:kMPFIRGA4DefaultAdPersonalizationKey
                                                         gdprConsents:gdprConsents
-                                                      mapping:mappingsConfig];
+                                                             mapping:mappingsConfig];
 
     NSMutableDictionary *uploadDict = [NSMutableDictionary dictionary];
 
@@ -432,11 +431,15 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     if (adPersonalization != nil) {
         uploadDict[FIRConsentTypeAdPersonalization] = adPersonalization.boolValue ? FIRConsentStatusGranted : FIRConsentStatusDenied;
     }
-    
-    
-    // Update consent state with FIRAnalytics
-    [FIRAnalytics setConsent:uploadDict];
+
+    return uploadDict;
 }
+
+- (void)updateConsent {
+    NSDictionary *consentDict = [self consentDictionaryForCurrentUser];
+    [FIRAnalytics setConsent:consentDict];
+}
+
 
 - (NSString *)getEventNameForCommerceEvent:(MPCommerceEvent *)commerceEvent parameters:(NSDictionary<NSString *, id> *)parameters {
     switch (commerceEvent.action) {
@@ -673,16 +676,24 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
                                         gdprConsents:(NSDictionary<NSString *, MPGDPRConsent *> *)gdprConsents
                                       mapping:(NSDictionary<NSString *, NSString*> *) mapping {
 
-    // Prefer mParticle Consent if available
     NSString *purpose = mapping[mappingKey];
-    if (purpose) {
-        MPGDPRConsent *consent = gdprConsents[purpose];
-        if (consent) {
-            return @(consent.consented);
-        }
+    NSNumber *consent = [self resolvedConsentForPurpose:purpose gdprConsents:gdprConsents];
+    if (consent) {
+        return consent;
     }
+    return [self resolvedConsentFromDefault:defaultKey];
+}
 
-    // Fallback to configuration defaults
+- (NSNumber * _Nullable)resolvedConsentForPurpose:(NSString *)purpose
+                                      gdprConsents:(NSDictionary<NSString *, MPGDPRConsent *> *)gdprConsents {
+    MPGDPRConsent *consent = gdprConsents[purpose];
+    if (consent) {
+        return @(consent.consented);
+    }
+    return nil;
+}
+
+- (NSNumber * _Nullable)resolvedConsentFromDefault:(NSString *)defaultKey {
     NSString *value = self->_configuration[defaultKey];
     if ([value isEqualToString:@"Granted"]) {
         return @(YES);
