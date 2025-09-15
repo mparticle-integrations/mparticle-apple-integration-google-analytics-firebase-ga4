@@ -705,7 +705,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 }
 
 - (NSArray<NSDictionary *>*)mappingForKey:(NSString*)key {
-    NSString *mappingJson = _configuration[@"consentMappingSDK"];
+    NSString *mappingJson = _configuration[key];
     if (![mappingJson isKindOfClass:[NSString class]]) {
         return nil;
     }
