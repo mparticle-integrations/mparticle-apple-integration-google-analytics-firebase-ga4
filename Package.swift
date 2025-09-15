@@ -43,5 +43,11 @@ let package = Package(
             exclude: ["Info.plist", "dummy.swift"],
             resources: [.process("PrivacyInfo.xcprivacy")],
             publicHeadersPath: "."),
+        
+        .testTarget(
+            name: "mParticle-Google-Analytics-Firebase-GA4SwiftTests",
+            dependencies: ["mParticle-Google-Analytics-Firebase-GA4"],
+            path: "mParticle-Google-Analytics-Firebase-GA4Tests/Swift"
+        )
     ]
 )
