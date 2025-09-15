@@ -113,8 +113,8 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         }
         
         [self updateInstanceIDIntegration];
-        
-        [self updateConsent];
+        MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
+        [self updateConsent: currentUser.consentState];
         
         _started = YES;
         
@@ -395,12 +395,12 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 }
 
 - (MPKitExecStatus *)setConsentState:(nullable MPConsentState *)state {
-    [self updateConsent];
+    [self updateConsent: state];
     
     return [self execStatus:MPKitReturnCodeSuccess];
 }
 
-- (void)updateConsent {
+- (void)updateConsent:(MPConsentState *)consentState {
     NSArray<NSDictionary *> *mappings = [self mappingForKey: @"consentMappingSDK"];
     NSDictionary<NSString *, NSString *> *mappingsConfig;
     if (mappings != nil) {
@@ -408,8 +408,8 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
     }
     
     
-    MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
-    NSDictionary<NSString *, MPGDPRConsent *> *gdprConsents = currentUser.consentState.gdprConsentState;
+    
+    NSDictionary<NSString *, MPGDPRConsent *> *gdprConsents = consentState.gdprConsentState;
 
     NSNumber *adStorage = [self resolvedConsentForMappingKey:kMPFIRGA4AdStorageKey
                                                   defaultKey:kMPFIRGA4DefaultAdStorageKey
