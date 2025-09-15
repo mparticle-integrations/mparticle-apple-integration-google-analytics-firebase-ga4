@@ -102,6 +102,11 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 
 #pragma mark MPKitInstanceProtocol methods
 - (MPKitExecStatus *)didFinishLaunchingWithConfiguration:(NSDictionary *)configuration {
+    MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
+    return [self didFinishLaunchingWithConfiguration:configuration withConsentState:currentUser.consentState];
+}
+
+- (MPKitExecStatus *)didFinishLaunchingWithConfiguration:(NSDictionary *)configuration withConsentState: (MPConsentState *)consentState {
     _configuration = configuration;
     
     if ([FIRApp defaultApp] == nil) {
@@ -113,8 +118,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
         }
         
         [self updateInstanceIDIntegration];
-        MParticleUser *currentUser = [[[MParticle sharedInstance] identity] currentUser];
-        [self updateConsent: currentUser.consentState];
+        [self updateConsent: consentState];
         
         _started = YES;
         
