@@ -15,6 +15,19 @@
 
 static NSString* (^customNameStandardization)(NSString* name) = nil;
 
+@implementation NSString(PRIVATE)
+
+- (NSNumber*)isGranted {
+    if ([self isEqualToString:@"Granted"]) {
+        return @(YES);
+    } else if ([self isEqualToString:@"Denied"]) {
+        return @(NO);
+    }
+    return nil;
+}
+
+@end
+
 @interface MPKitFirebaseGA4Analytics () <MPKitProtocol> {
     BOOL forwardRequestsServerSide;
 }
@@ -684,12 +697,7 @@ const NSInteger FIR_MAX_ITEM_PARAMETERS = 25;
 
     // Fallback to configuration defaults
     NSString *value = self->_configuration[defaultKey];
-    if ([value isEqualToString:@"Granted"]) {
-        return @(YES);
-    } else if ([value isEqualToString:@"Denied"]) {
-        return @(NO);
-    }
-    return nil;
+    return [value isGranted];
 }
 
 - (NSArray<NSDictionary *>*)mappingForKey:(NSString*)key {
