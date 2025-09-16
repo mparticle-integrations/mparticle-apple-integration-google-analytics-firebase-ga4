@@ -28,7 +28,7 @@
     NSBundle *testBundle = [NSBundle bundleForClass:[self class]];
 
     // 2. Locate the auto-generated resource bundle for this test target
-    NSURL *resourceBundleURL = [testBundle URLForResource:@"mParticle-Google-Analytics-Firebase-GA4_mParticle-Google-Analytics-Firebase-GA4ObjcTests"
+    NSURL *resourceBundleURL = [testBundle URLForResource:@"mParticle-Google-Analytics-Firebase-GA4_mParticle-Google-Analytics-Firebase-GA4-Objc-Tests"
                                             withExtension:@"bundle"];
     NSBundle *resourceBundle = [NSBundle bundleWithURL:resourceBundleURL];
     NSAssert(resourceBundle != nil, @"Resource bundle not found");
