@@ -20,6 +20,15 @@
 + (void)setCustomNameStandardization:(NSString * _Nonnull (^_Nullable)(NSString * _Nonnull name))standardization;
 + (NSString * _Nonnull (^_Nullable)(NSString * _Nonnull name))customNameStandardization;
 
+- (nullable NSNumber *)resolvedConsentForMappingKey:(NSString * _Nonnull)mappingKey
+                                         defaultKey:(NSString * _Nonnull)defaultKey
+                                       gdprConsents:(NSDictionary<NSString *, MPGDPRConsent *> * _Nonnull)gdprConsents
+                                            mapping:(NSDictionary<NSString *, NSString *> * _Nullable)mapping;
+
+- (nullable NSArray<NSDictionary *>*)mappingForKey:(NSString* _Nonnull)key;
+
+- (nonnull NSDictionary*)convertToKeyValuePairs: (NSArray<NSDictionary *> * _Nonnull)mappings;
+
 @end
 
 static NSString * _Nonnull const kMPFIRGA4ExternalUserIdentityType = @"externalUserIdentityType";

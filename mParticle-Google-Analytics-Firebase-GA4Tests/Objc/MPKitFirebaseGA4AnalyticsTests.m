@@ -22,8 +22,22 @@
 @implementation mParticle_Firebase_AnalyticsTests
 
 - (void)setUp {
-    NSString *bundlePath = [[NSBundle bundleForClass:[self class]] resourcePath];
-    NSString *filePath = [bundlePath stringByAppendingPathComponent:@"GoogleService-Info.plist"];
+    [super setUp];
+
+    // 1. Start with the test bundle
+    NSBundle *testBundle = [NSBundle bundleForClass:[self class]];
+
+    // 2. Locate the auto-generated resource bundle for this test target
+    NSURL *resourceBundleURL = [testBundle URLForResource:@"mParticle-Google-Analytics-Firebase-GA4_mParticle-Google-Analytics-Firebase-GA4-Objc-Tests"
+                                            withExtension:@"bundle"];
+    NSBundle *resourceBundle = [NSBundle bundleWithURL:resourceBundleURL];
+    NSAssert(resourceBundle != nil, @"Resource bundle not found");
+
+    // 3. Fetch the plist inside that resource bundle
+    NSString *filePath = [resourceBundle pathForResource:@"GoogleService-Info" ofType:@"plist"];
+    NSAssert(filePath != nil, @"GoogleService-Info.plist not found in resource bundle");
+
+    // 4. Configure Firebase
     FIROptions *options = [[FIROptions alloc] initWithContentsOfFile:filePath];
     [FIRApp configureWithOptions:options];
 }
