@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = "mParticle-Google-Analytics-Firebase-GA4"
-    s.version          = "8.11.1"
+    s.version          = "9.0.0"
     s.summary          = "Google Analytics 4 for Firebase integration for mParticle"
 
     s.description      = <<-DESC
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     s.ios.deployment_target = "15.0"
     s.ios.source_files      = 'mParticle-Google-Analytics-Firebase-GA4/*.{h,m,mm}'
     s.ios.resource_bundles  = { 'mParticle-Google-Analytics-Firebase-GA4-Privacy' => ['mParticle-Google-Analytics-Firebase-GA4/PrivacyInfo.xcprivacy'] }
-    s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.22'
+    s.ios.dependency 'mParticle-Apple-SDK/mParticle', '~> 9.0'
     s.ios.frameworks = 'CoreTelephony', 'SystemConfiguration'
     s.libraries = 'z'
     s.ios.dependency 'Firebase/Core', '~> 12.0'
@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
     s.tvos.deployment_target = "15.0"
     s.tvos.source_files      = 'mParticle-Google-Analytics-Firebase-GA4/*.{h,m,mm}'
     s.tvos.resource_bundles  = { 'mParticle-Google-Analytics-Firebase-GA4-Privacy' => ['mParticle-Google-Analytics-Firebase-GA4/PrivacyInfo.xcprivacy'] }
-    s.tvos.dependency 'mParticle-Apple-SDK/mParticle', '~> 8.22'
+    s.tvos.dependency 'mParticle-Apple-SDK/mParticle', '~> 9.0'
     s.tvos.frameworks = 'SystemConfiguration'
     s.libraries = 'z'
     s.tvos.dependency 'Firebase/Core', '~> 12.0'
